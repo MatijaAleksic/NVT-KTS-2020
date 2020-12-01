@@ -12,17 +12,21 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
+@Table(name = "user_entity")
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-@Table(name = "user")
-public class User {
+public class User{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "cust_seq_user")
+	@SequenceGenerator(name = "cust_seq_user", sequenceName = "cust_seq_user", initialValue = 1, allocationSize = 1)
 	@Column(name = "user_id")
 	private Long id;
+	
+	
 	
 	@Column(name = "first_name" , nullable = false , unique = false)
 	private String firstName;
@@ -40,7 +44,7 @@ public class User {
 	private String email;
 
 	
-	private Set<Raiting> raitings;// mislim da ipak nije potrebno i treba se ispraviti na dijagramu...zbog toga nije stavljena anotacija
+	//private Set<Raiting> raitings;// mislim da ipak nije potrebno i treba se ispraviti na dijagramu...zbog toga nije stavljena anotacija
 	
 	//Dodati na dijagram
 	@ManyToMany(mappedBy = "users" ,fetch = FetchType.LAZY , cascade = CascadeType.ALL)
@@ -51,7 +55,7 @@ public class User {
 	}
 
 	public User(Long id, String firstName, String lastName, String userName, String password, String email,
-			Set<Raiting> raitings, Set<CulturalOffer> culturalOffers) {
+			 Set<CulturalOffer> culturalOffers) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -59,17 +63,17 @@ public class User {
 		this.userName = userName;
 		this.password = password;
 		this.email = email;
-		this.raitings = raitings;
+		//this.raitings = raitings;
 		this.culturalOffers = culturalOffers;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+//	public Long getId() {
+//		return id;
+//	}
+//
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
 
 	public String getFirstName() {
 		return firstName;
@@ -111,13 +115,13 @@ public class User {
 		this.email = email;
 	}
 
-	public Set<Raiting> getRaitings() {
-		return raitings;
-	}
+//	public Set<Raiting> getRaitings() {
+//		return raitings;
+//	}
 
-	public void setRaitings(Set<Raiting> raitings) {
-		this.raitings = raitings;
-	}
+//	public void setRaitings(Set<Raiting> raitings) {
+//		this.raitings = raitings;
+//	}
 
 	public Set<CulturalOffer> getCulturalOffers() {
 		return culturalOffers;
@@ -130,7 +134,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName
-				+ ", password=" + password + ", email=" + email + ", raitings=" + raitings + ", culturalOffers="
+				+ ", password=" + password + ", email=" + email + ", raitings=" + ", culturalOffers="
 				+ culturalOffers + "]";
 	}
 

@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -24,7 +25,7 @@ public class Comment {
 	private String text;
 	
 	@PrimaryKeyJoinColumn
-	@OneToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
 	private User user;
 
 	private Comment() {

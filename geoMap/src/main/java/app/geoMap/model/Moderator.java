@@ -5,17 +5,18 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "moderator")
+@Table(name = "moderator_entity")
 public class Moderator extends User{
-
-	@PrimaryKeyJoinColumn
-	@OneToMany( fetch = FetchType.LAZY , cascade = CascadeType.ALL)
-	private Set<CulturalOffer> culturalOffers; //Kulturne ponude na koje je moderator kreirao.
+	//Ovo je jedini problem.
+	@JoinColumn(name = "cultural_offer_id")
+	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	private Set<CulturalOffer> culturalOffers; //Kulturne ponude koje je moderator kreirao.
 	
 	
 	//Dodati na dijagram

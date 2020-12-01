@@ -3,10 +3,14 @@ package app.geoMap.model;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "administrator_entity")
 public class Administrator extends User{
 	
 	//Isto pitanje kao i kod news

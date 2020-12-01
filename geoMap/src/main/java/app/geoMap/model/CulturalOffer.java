@@ -51,14 +51,11 @@ public class CulturalOffer {
 	private float latitude;
 	
 	@OneToMany(mappedBy = "culturalOffer", fetch = FetchType.LAZY , cascade = CascadeType.ALL)
-	private Set<Raiting> raitings;
-	
-	@PrimaryKeyJoinColumn
-	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
-	private Set<Comment> comments;
+	private Set<Raiting> raitings;	
 	
 	@OneToMany(mappedBy = "culturalOffer" , fetch = FetchType.LAZY , cascade = CascadeType.ALL)
 	private Set<News> news;
+	
 	
 	@PrimaryKeyJoinColumn
 	@ManyToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
@@ -68,8 +65,14 @@ public class CulturalOffer {
 	@ManyToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
 	private CultureSubtype cultureSubtype;
 	
+	
+	
 	@PrimaryKeyJoinColumn
-	@ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL) //moglo bi i ManyToMany ali veza je usmerena pa nije bitno.
+	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+	private Set<Comment> comments;
+	
+	@PrimaryKeyJoinColumn
+	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL) //moglo bi i ManyToMany ali veza je usmerena pa nije bitno.
 	private Set<Image> images;
 	
 	@ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)

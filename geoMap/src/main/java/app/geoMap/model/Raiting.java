@@ -25,7 +25,7 @@ public class Raiting {
 	private float value;
 	
 	@PrimaryKeyJoinColumn
-	@OneToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
 	private User user;
 	
 	
@@ -45,13 +45,13 @@ public class Raiting {
 		this.culturalOffer = culturalOffer;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+//	public Long getId() {
+//		return id;
+//	}
+//
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
 
 	public float getValue() {
 		return value;
