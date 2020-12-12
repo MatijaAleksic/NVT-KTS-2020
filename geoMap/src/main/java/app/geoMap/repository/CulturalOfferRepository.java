@@ -7,5 +7,7 @@ import app.geoMap.model.CulturalOffer;
 
 @Repository
 public interface CulturalOfferRepository extends JpaRepository<CulturalOffer, Long>{
+	
+	CulturalOffer findByName(String name);
 
 }

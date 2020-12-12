@@ -48,17 +48,18 @@ public class News {
 	private Set<Image> images;
 
 
-	
-	public News() {
 		
+	public News() {}
+	
+	public News(String title, Date creationDate) {
+		super();
+		this.title = title;
+		this.creationDate = creationDate;
 	}
-	
-	
 
-	public News(Long id, String title, String text, Date creationDate, CulturalOffer culturalOffer, Moderator moderator,
+	public News(String title, String text, Date creationDate, CulturalOffer culturalOffer, Moderator moderator,
 			Set<Image> images) {
 		super();
-		this.id = id;
 		this.title = title;
 		this.text = text;
 		this.creationDate = creationDate;
@@ -67,19 +68,13 @@ public class News {
 		this.images = images;
 	}
 
-
-
 	public Moderator getModerator() {
 		return moderator;
 	}
 
-
-
 	public void setModerator(Moderator moderator) {
 		this.moderator = moderator;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -126,20 +121,13 @@ public class News {
 		return culturalOffer;
 	}
 
-
 	public void setCulturalOffer(CulturalOffer culturalOffer) {
 		this.culturalOffer = culturalOffer;
 	}
-
 
 	@Override
 	public String toString() {
 		return "News [id=" + id + ", title=" + title + ", text=" + text + ", creationDate=" + creationDate
 				+ ", culturalOffer=" + culturalOffer + ", moderator=" + moderator + ", images=" + images + "]";
 	}
-	
-	
-	
-	
-	
 }

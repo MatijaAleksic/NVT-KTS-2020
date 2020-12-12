@@ -1,15 +1,18 @@
-package app.geoMap.Service;
+package app.geoMap.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import app.geoMap.model.News;
-import app.geoMap.repository.CulturalOfferRepository;
-import app.geoMap.repository.ImageRepository;
-import app.geoMap.repository.ModeratorRepository;
+import app.geoMap.model.Moderator;
+import app.geoMap.model.CulturalOffer;
 import app.geoMap.repository.NewsRepository;
+import app.geoMap.repository.ModeratorRepository;
+import app.geoMap.repository.CulturalOfferRepository;
 
 @Service
 public class NewsService implements ServiceInterface<News>{
@@ -18,42 +21,77 @@ public class NewsService implements ServiceInterface<News>{
 	private NewsRepository newsRepository;
 	
 	@Autowired
-	private CulturalOfferService culturalOfferService;
-	
+	private ModeratorRepository moderatorRepository;
+
 	@Autowired
-	private ModeratorService moderatorService;
-	
-	@Autowired
-	private ImageService imageService;
+	private CulturalOfferRepository culturalOfferRepository;
+
 
 	
-	public List<News> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+    public List<News> findAll() {
+        return newsRepository.findAll();
+    }
+	
+	public Page<News> findAll(Pageable pageable) {
+		return newsRepository.findAll(pageable);
 	}
 
-	
-	public News findOne(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public News findOne(Long id) {
+        return newsRepository.findById(id).orElse(null);
+    }
 
+    public News create(News entity, Long culturalOfferId, Long moderatorId) throws Exception {
+        if(newsRepository.findById(entity.getId()).orElse(null) != null){
+            throw new Exception("News with given id already exists");
+        }
+		CulturalOffer culturalOffer = culturalOfferRepository.findById(culturalOfferId).orElse(null);
+        if(culturalOffer == null) {
+            throw new Exception("Cultural Offer category doesn't exist.");
+        }
+        entity.setCulturalOffer(culturalOffer);
+        
+		Moderator moderator = moderatorRepository.findById(moderatorId).orElse(null);
+        if(moderator == null) {
+            throw new Exception("Chosen Moderator doesn't exist.");
+        }
+        entity.setModerator(moderator);
+        
+        return newsRepository.save(entity);
+    }
 
+    @Override
+    public News update(News entity, Long id) throws Exception {
+    	News existingNews =  newsRepository.findById(id).orElse(null);
+        if(existingNews == null){
+            throw new Exception("News with given id doesn't exist");
+        }
+        existingNews.setCreationDate(entity.getCreationDate());
+        existingNews.setCulturalOffer(entity.getCulturalOffer());
+        existingNews.setImages(entity.getImages());
+        existingNews.setModerator(entity.getModerator());
+        existingNews.setText(entity.getText());
+        existingNews.setTitle(entity.getText());
+
+        return newsRepository.save(existingNews);
+    }
+
+    @Override
+    public void delete(Long id) throws Exception {
+    	News existingNews = newsRepository.findById(id).orElse(null);
+        if(existingNews == null){
+            throw new Exception("News with given id doesn't exist");
+        }
+        newsRepository.delete(existingNews);
+    }
+
+	@Override
 	public News create(News entity) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public News update(News entity, Long id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	public void delete(Long id) throws Exception {
-		// TODO Auto-generated method stub
-		
+		if(newsRepository.findById(entity.getId()).orElse(null) != null){
+            throw new Exception("News with given id already exists");
+		} 
+        return newsRepository.save(entity);
 	}
 	
 }

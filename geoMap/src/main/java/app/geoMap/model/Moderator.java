@@ -15,44 +15,32 @@ public class Moderator extends User{
 
 	@PrimaryKeyJoinColumn
 	@OneToMany( fetch = FetchType.LAZY , cascade = CascadeType.ALL)
-	private Set<CulturalOffer> culturalOffers; //Kulturne ponude na koje je moderator kreirao.
-	
-	
-	//Dodati na dijagram
-	@OneToMany(mappedBy =  "moderator" , fetch = FetchType.LAZY , cascade = CascadeType.ALL)
-	private Set<News> news;
+	private Set<CulturalOffer> culturalOffersCreated; //Kulturne ponude na koje je moderator kreirao.
 	
 	public Moderator() {
 		
 		
 	}
 	
-	public Moderator(Set<CulturalOffer> culturalOffers, Set<News> news) {
+	public Moderator(String firstName, String lastName, String userName, String password, String email) {
+		super(firstName,lastName, userName, password, email);
+	}
+	
+	public Moderator(Set<CulturalOffer> culturalOffersCreated) {
 		super();
-		this.culturalOffers = culturalOffers;
-		this.news = news;
+		this.culturalOffersCreated = culturalOffersCreated;
 	}
 
-	public Set<CulturalOffer> getCulturalOffers() {
-		return culturalOffers;
+	public Set<CulturalOffer> getCulturalOffersCreated() {
+		return culturalOffersCreated;
 	}
 
-	public void setCulturalOffers(Set<CulturalOffer> culturalOffers) {
-		this.culturalOffers = culturalOffers;
-	}
-
-	public Set<News> getNews() {
-		return news;
-	}
-
-	public void setNews(Set<News> news) {
-		this.news = news;
+	public void setCulturalOffersCreated(Set<CulturalOffer> culturalOffersCreated) {
+		this.culturalOffersCreated = culturalOffersCreated;
 	}
 
 	@Override
 	public String toString() {
-		return "Moderator [culturalOffers=" + culturalOffers + ", news=" + news + "]";
+		return "Moderator [culturalOffersCreated=" + culturalOffersCreated + "]";
 	}
-	
-
 }

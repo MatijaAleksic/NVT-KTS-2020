@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -39,28 +40,31 @@ public class User {
 	@Column(name = "email" , unique = false , nullable = false)
 	private String email;
 
-	
-	private Set<Raiting> raitings;// mislim da ipak nije potrebno i treba se ispraviti na dijagramu...zbog toga nije stavljena anotacija
-	
 	//Dodati na dijagram
-	@ManyToMany(mappedBy = "users" ,fetch = FetchType.LAZY , cascade = CascadeType.ALL)
-	private Set<CulturalOffer> culturalOffers; // Kulturne ponude na koje je user pretplacen.
+	@OneToMany(mappedBy = "users" ,fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+	private Set<CulturalOffer> culturalOffersSubscribed; // Kulturne ponude na koje je user pretplacen. SUBSCRIBED
 	
 	public User() {
 		
 	}
-
-	public User(Long id, String firstName, String lastName, String userName, String password, String email,
-			Set<Raiting> raitings, Set<CulturalOffer> culturalOffers) {
+	
+	public User(String firstName, String lastName, String userName, String password, String email) {
 		super();
-		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.userName = userName;
 		this.password = password;
 		this.email = email;
-		this.raitings = raitings;
-		this.culturalOffers = culturalOffers;
+	}
+
+	public User(String firstName, String lastName, String userName, String password, String email, Set<CulturalOffer> culturalOffersSubscribed) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.userName = userName;
+		this.password = password;
+		this.email = email;
+		this.culturalOffersSubscribed = culturalOffersSubscribed;
 	}
 
 	public Long getId() {
@@ -111,27 +115,19 @@ public class User {
 		this.email = email;
 	}
 
-	public Set<Raiting> getRaitings() {
-		return raitings;
+	public Set<CulturalOffer> getCulturalOffersSubscribed() {
+		return culturalOffersSubscribed;
 	}
 
-	public void setRaitings(Set<Raiting> raitings) {
-		this.raitings = raitings;
-	}
-
-	public Set<CulturalOffer> getCulturalOffers() {
-		return culturalOffers;
-	}
-
-	public void setCulturalOffers(Set<CulturalOffer> culturalOffers) {
-		this.culturalOffers = culturalOffers;
+	public void setCulturalOffersSubscribed(Set<CulturalOffer> culturalOffersSubscribed) {
+		this.culturalOffersSubscribed = culturalOffersSubscribed;
 	}
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName
-				+ ", password=" + password + ", email=" + email + ", raitings=" + raitings + ", culturalOffers="
-				+ culturalOffers + "]";
+				+ ", password=" + password + ", email=" + email + ", culturalOffers="
+				+ culturalOffersSubscribed + "]";
 	}
 
 	

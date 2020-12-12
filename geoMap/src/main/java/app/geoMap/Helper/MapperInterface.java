@@ -1,4 +1,4 @@
-package app.geoMap.Helper;
+package app.geoMap.helper;
 
 public interface MapperInterface<T,U> {
 

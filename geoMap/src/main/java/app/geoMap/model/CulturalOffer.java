@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+
 @Entity
 @Table(name = "cultural_offer")
 public class CulturalOffer {
@@ -37,7 +38,6 @@ public class CulturalOffer {
 	@Column(name = "description",nullable = false , unique = false)
 	private String description;
 	
-	//Izmeniti na dijagramu
 	@Column(name = "email" , nullable = true , unique = false)
 	private String email;
 	
@@ -50,8 +50,11 @@ public class CulturalOffer {
 	@Column(name = "latitude" , nullable = false , unique = false)
 	private float latitude;
 	
+	@Column(name = "moderator" , nullable = false , unique = false)
+	private Moderator moderator;
+	
 	@OneToMany(mappedBy = "culturalOffer", fetch = FetchType.LAZY , cascade = CascadeType.ALL)
-	private Set<Raiting> raitings;
+	private Set<Rating> ratings;
 	
 	@PrimaryKeyJoinColumn
 	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
@@ -69,22 +72,26 @@ public class CulturalOffer {
 	private CultureSubtype cultureSubtype;
 	
 	@PrimaryKeyJoinColumn
-	@ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL) //moglo bi i ManyToMany ali veza je usmerena pa nije bitno.
+	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
 	private Set<Image> images;
-	
-	@ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
-	private Set<User> users;
 
-	private CulturalOffer() {
-		
-		
+	
+
+	public CulturalOffer() {}
+	
+	public CulturalOffer(String name, Date creationDate, float longitude, float latitude)
+	{
+		this.name = name;
+		this.creationDate = creationDate;
+		this.longitude = longitude;
+		this.latitude = latitude;
 	}
 	
-	public CulturalOffer(Long id, String name, Date creationDate, String description, String email, String phone,
-			float longitude, float latitude, Set<Raiting> raitings, Set<Comment> comments, Set<News> news,
-			CultureType cultureType, CultureSubtype cultureSubtype, Set<Image> images, Set<User> users) {
+	
+	public CulturalOffer(String name, Date creationDate, String description, String email, String phone,
+			float longitude, float latitude, Moderator moderator, Set<Rating> ratings, Set<Comment> comments, Set<News> news,
+			CultureType cultureType, CultureSubtype cultureSubtype, Set<Image> images) {
 		super();
-		this.id = id;
 		this.name = name;
 		this.creationDate = creationDate;
 		this.description = description;
@@ -92,13 +99,13 @@ public class CulturalOffer {
 		this.phone = phone;
 		this.longitude = longitude;
 		this.latitude = latitude;
-		this.raitings = raitings;
+		this.moderator = moderator;
+		this.ratings = ratings;
 		this.comments = comments;
 		this.news = news;
 		this.cultureType = cultureType;
 		this.cultureSubtype = cultureSubtype;
 		this.images = images;
-		this.users = users;
 	}
 
 	public Long getId() {
@@ -165,12 +172,12 @@ public class CulturalOffer {
 		this.latitude = latitude;
 	}
 
-	public Set<Raiting> getRaitings() {
-		return raitings;
+	public Set<Rating> getRatings() {
+		return ratings;
 	}
 
-	public void setRaitings(Set<Raiting> raitings) {
-		this.raitings = raitings;
+	public void setRatings(Set<Rating> raitings) {
+		this.ratings = raitings;
 	}
 
 	public Set<Comment> getComments() {
@@ -213,20 +220,21 @@ public class CulturalOffer {
 		this.images = images;
 	}
 
-	public Set<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(Set<User> users) {
-		this.users = users;
-	}
 
 	@Override
 	public String toString() {
 		return "CulturalOffer [id=" + id + ", name=" + name + ", creationDate=" + creationDate + ", description="
 				+ description + ", email=" + email + ", phone=" + phone + ", longitude=" + longitude + ", latitude="
-				+ latitude + ", raitings=" + raitings + ", comments=" + comments + ", news=" + news + ", cultureType="
-				+ cultureType + ", cultureSubtype=" + cultureSubtype + ", images=" + images + ", users=" + users + "]";
+				+ latitude + ", moderator =" + moderator + ", raitings=" + ratings + ", comments=" + comments + ", news=" + news + ", cultureType="
+				+ cultureType + ", cultureSubtype=" + cultureSubtype + ", images=" + images + "]";
+	}
+
+	public Moderator getModerator() {
+		return moderator;
+	}
+
+	public void setModerator(Moderator moderator) {
+		this.moderator = moderator;
 	}
 	
 	 

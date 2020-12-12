@@ -7,5 +7,7 @@ import app.geoMap.model.Image;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long>{
+	
+	Image findByName(String name);
 
 }

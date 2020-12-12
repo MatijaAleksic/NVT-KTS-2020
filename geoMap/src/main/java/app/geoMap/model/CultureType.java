@@ -31,8 +31,11 @@ public class CultureType {
 		
 	}
 	
-	public CultureType(Long id, String name, Set<CultureSubtype> cultureSubtypes) {
-		this.id = id;
+	public CultureType(String name) {
+		this.name = name;
+	}
+	
+	public CultureType(String name, Set<CultureSubtype> cultureSubtypes) {
 		this.name = name;
 		this.cultureSubtypes = cultureSubtypes;
 	}

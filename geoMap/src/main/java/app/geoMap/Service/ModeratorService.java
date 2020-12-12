@@ -1,12 +1,13 @@
-package app.geoMap.Service;
+package app.geoMap.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import app.geoMap.model.Moderator;
-import app.geoMap.repository.CulturalOfferRepository;
 import app.geoMap.repository.ModeratorRepository;
 
 @Service
@@ -15,39 +16,52 @@ public class ModeratorService implements ServiceInterface<Moderator>{
 	@Autowired
 	private ModeratorRepository moderatorRepository;
 	
-	@Autowired
-	private CulturalOfferService culturalOfferService;
-	
-	@Autowired
-	private NewsService newsService;
-
+	@Override
 	public List<Moderator> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return moderatorRepository.findAll();
 	}
-
 	
+	public Page<Moderator> findAll(Pageable pageable) {
+		return moderatorRepository.findAll(pageable);
+	}
+
+	@Override
 	public Moderator findOne(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return moderatorRepository.findById(id).orElse(null);
 	}
 
-
+	@Override
 	public Moderator create(Moderator entity) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		if(moderatorRepository.findById(entity.getId()) != null){
+            throw new Exception("Moderator with given email address already exists");
+        }
+        return moderatorRepository.save(entity);
 	}
 
-
+	@Override
 	public Moderator update(Moderator entity, Long id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Moderator existingModerator =  moderatorRepository.findById(id).orElse(null);
+        if(existingModerator == null){
+            throw new Exception("Moderator with given id doesn't exist");
+        }
+        
+        existingModerator.setFirstName(entity.getFirstName());
+        existingModerator.setLastName(entity.getLastName());
+        existingModerator.setUserName(entity.getUserName());
+        existingModerator.setPassword(entity.getPassword());
+        existingModerator.setEmail(entity.getEmail());
+        existingModerator.setCulturalOffersSubscribed(entity.getCulturalOffersSubscribed());
+        existingModerator.setCulturalOffersCreated(entity.getCulturalOffersCreated());
+        
+        return moderatorRepository.save(existingModerator);
 	}
 
-
+	@Override
 	public void delete(Long id) throws Exception {
-		// TODO Auto-generated method stub
-		
+		Moderator existingModerator = moderatorRepository.findById(id).orElse(null);
+        if(existingModerator == null){
+            throw new Exception("Moderator with given id doesn't exist");
+        }
+        moderatorRepository.delete(existingModerator);
 	}
-
 }

@@ -7,5 +7,9 @@ import app.geoMap.model.CultureType;
 
 @Repository
 public interface CultureTypeRepository extends JpaRepository<CultureType, Long>{
+	
+	CultureType findByName(String name);
+	
+	CultureType findByNameAndIdNot(String name, Long id);
 
 }

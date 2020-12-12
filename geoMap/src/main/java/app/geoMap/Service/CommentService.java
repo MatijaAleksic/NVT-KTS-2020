@@ -1,8 +1,10 @@
-package app.geoMap.Service;
+package app.geoMap.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import app.geoMap.model.Comment;
@@ -13,40 +15,46 @@ public class CommentService implements ServiceInterface<Comment>{
 
 	@Autowired
 	private CommentRepository commentRepository;
-	
-	@Autowired
-	private UserService userService;
-	
 
+	@Override
 	public List<Comment> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return commentRepository.findAll();
 	}
-
 	
+	public Page<Comment> findAll(Pageable pageable) {
+		return commentRepository.findAll(pageable);
+	}
+	
+	@Override
 	public Comment findOne(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return commentRepository.findById(id).orElse(null);
 	}
 
-	
+	@Override
 	public Comment create(Comment entity) throws Exception {
-		// TODO Auto-generated method stub
 		return null;
+//		if(commentRepository.findByUsername(entity.getText()) != null){
+//            throw new Exception("User with username already exists");
+//        }
+//        return commentRepository.save(entity);
 	}
 
-	
+	@Override
 	public Comment update(Comment entity, Long id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Comment existingUser =  commentRepository.findById(id).orElse(null);
+        if(existingUser == null){
+            throw new Exception("User with given id doesn't exist");
+        }
+        existingUser.setText(entity.getText());
+        return commentRepository.save(existingUser);
 	}
 
-	
+	@Override
 	public void delete(Long id) throws Exception {
-		// TODO Auto-generated method stub
-		
+		Comment existingUser = commentRepository.findById(id).orElse(null);
+        if(existingUser == null){
+            throw new Exception("User with given id doesn't exist");
+        }
+        commentRepository.delete(existingUser);
 	}
-	
-	
-	
 }

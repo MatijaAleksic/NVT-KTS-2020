@@ -1,4 +1,4 @@
-package app.geoMap.Service;
+package app.geoMap.service;
 
 import java.util.List;
 

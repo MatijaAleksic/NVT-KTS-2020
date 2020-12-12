@@ -31,9 +31,11 @@ public class CultureSubtype {
 		
 	}
 	
+	public CultureSubtype(String name) {
+		this.name = name;
+	}
 	
-	public CultureSubtype(Long id, String name, CultureType cultureType) {
-		this.id = id;
+	public CultureSubtype(String name, CultureType cultureType) {
 		this.name = name;
 		this.cultureType = cultureType;
 	}

@@ -3,13 +3,17 @@ package app.geoMap.model;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
+
+@Entity
+@Table(name = "administrator")
 public class Administrator extends User{
 	
-	//Isto pitanje kao i kod news
 	@PrimaryKeyJoinColumn
 	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	private Set<User> allUsers;
@@ -31,6 +35,10 @@ public class Administrator extends User{
 	
 	public Administrator() {
 		
+	}
+	
+	public Administrator(String firstName, String lastName, String userName, String password, String email) {
+		super(firstName,lastName, userName, password, email);
 	}
 	
 	public Administrator(Set<User> allUsers, Set<Moderator> allModerators, Set<CultureType> allCultureType,

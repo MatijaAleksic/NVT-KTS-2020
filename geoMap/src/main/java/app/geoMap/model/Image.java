@@ -19,17 +19,17 @@ public class Image {
 	@Column(name = "name",unique = true, nullable = false)
 	private String name;
 	
-	//@Lob - pitanje
 	@Column(name = "picByte", length = 1000)
 	private byte[] picByte;
 
 	
-	public Image() {
-		
+	public Image() { }
+	
+	public Image(String name) {
+		this.name = name;
 	}
 	
-	public Image(Long id, String name, byte[] picByte) {
-		this.id = id;
+	public Image(String name, byte[] picByte) {
 		this.name = name;
 		this.picByte = picByte;
 	}
