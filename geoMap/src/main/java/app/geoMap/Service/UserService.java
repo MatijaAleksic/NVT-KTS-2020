@@ -40,7 +40,7 @@ public class UserService implements ServiceInterface<User>{
 	
 	@Override
 	public User create(User entity) throws Exception {
-		if(userRepository.findByUsername(entity.getUserName()) != null){
+		if(userRepository.findByUserName(entity.getUserName()) != null){
             throw new Exception("User with username already exists");
         }
         return userRepository.save(entity);
@@ -70,4 +70,8 @@ public class UserService implements ServiceInterface<User>{
         }
         userRepository.delete(existingUser);
 	}
+	
+	public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

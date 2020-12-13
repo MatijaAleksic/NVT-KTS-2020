@@ -1,7 +1,12 @@
 package app.geoMap.model;
 
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,15 +14,19 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+
 @Entity
 @Table(name = "user_table")
-public class User {
+public class User implements UserDetails{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
@@ -38,9 +47,21 @@ public class User {
 	
 	@Column(name = "email" , unique = false , nullable = false)
 	private String email;
-
+	
 	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
 	private Set<CulturalOffer> culturalOffersSubscribed;
+	
+	
+	
+	@Column(name = "last_password_reset_date")
+    private Timestamp lastPasswordResetDate;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_authority",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+    private List<Authority> authorities;
+
 	
 	public User() {
 		
@@ -68,6 +89,23 @@ public class User {
 	public Long getId() {
 		return id;
 	}
+
+	public Timestamp getLastPasswordResetDate() {
+		return lastPasswordResetDate;
+	}
+
+	public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
+		this.lastPasswordResetDate = lastPasswordResetDate;
+	}
+
+	public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.authorities;
+    }
 
 	public void setId(Long id) {
 		this.id = id;
@@ -102,7 +140,9 @@ public class User {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		Timestamp now = new Timestamp(new Date().getTime());
+        this.setLastPasswordResetDate(now);
+        this.password = password;
 	}
 
 	public String getEmail() {
@@ -128,7 +168,28 @@ public class User {
 				+ culturalOffersSubscribed + "]";
 	}
 
-	
-	
-		
+	@Override
+	public String getUsername() {
+		return this.userName;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}	
 }
