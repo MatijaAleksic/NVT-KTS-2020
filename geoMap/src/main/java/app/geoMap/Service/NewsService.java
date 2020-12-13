@@ -8,10 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import app.geoMap.model.News;
-import app.geoMap.model.Moderator;
+import app.geoMap.model.Administrator;
 import app.geoMap.model.CulturalOffer;
 import app.geoMap.repository.NewsRepository;
-import app.geoMap.repository.ModeratorRepository;
+import app.geoMap.repository.AdministratorRepository;
 import app.geoMap.repository.CulturalOfferRepository;
 
 @Service
@@ -21,7 +21,7 @@ public class NewsService implements ServiceInterface<News>{
 	private NewsRepository newsRepository;
 	
 	@Autowired
-	private ModeratorRepository moderatorRepository;
+	private AdministratorRepository administratorRepository;
 
 	@Autowired
 	private CulturalOfferRepository culturalOfferRepository;
@@ -42,7 +42,7 @@ public class NewsService implements ServiceInterface<News>{
         return newsRepository.findById(id).orElse(null);
     }
 
-    public News create(News entity, Long culturalOfferId, Long moderatorId) throws Exception {
+    public News create(News entity, Long culturalOfferId, Long administratorId) throws Exception {
         if(newsRepository.findById(entity.getId()).orElse(null) != null){
             throw new Exception("News with given id already exists");
         }
@@ -52,11 +52,11 @@ public class NewsService implements ServiceInterface<News>{
         }
         entity.setCulturalOffer(culturalOffer);
         
-		Moderator moderator = moderatorRepository.findById(moderatorId).orElse(null);
-        if(moderator == null) {
+		Administrator administrator = administratorRepository.findById(administratorId).orElse(null);
+        if(administrator == null) {
             throw new Exception("Chosen Moderator doesn't exist.");
         }
-        entity.setModerator(moderator);
+        entity.setAdministrator(administrator);
         
         return newsRepository.save(entity);
     }
@@ -70,7 +70,7 @@ public class NewsService implements ServiceInterface<News>{
         existingNews.setCreationDate(entity.getCreationDate());
         existingNews.setCulturalOffer(entity.getCulturalOffer());
         existingNews.setImages(entity.getImages());
-        existingNews.setModerator(entity.getModerator());
+        existingNews.setAdministrator(entity.getAdministrator());
         existingNews.setText(entity.getText());
         existingNews.setTitle(entity.getText());
 

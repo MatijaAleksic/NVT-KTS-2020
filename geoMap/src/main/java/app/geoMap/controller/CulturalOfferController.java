@@ -19,6 +19,7 @@ import app.geoMap.model.CulturalOffer;
 import app.geoMap.service.CulturalOfferService;
 
 @RestController
+@RequestMapping(value =  "/api/cultural-offers", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CulturalOfferController {
 	@Autowired
     private CulturalOfferService culturalOfferService;

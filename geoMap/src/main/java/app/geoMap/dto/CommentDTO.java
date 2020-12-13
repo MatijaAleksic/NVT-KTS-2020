@@ -1,7 +1,5 @@
 package app.geoMap.dto;
 
-import app.geoMap.model.User;
-
 import javax.validation.constraints.NotBlank;
 	
 public class CommentDTO {

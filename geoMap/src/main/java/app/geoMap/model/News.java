@@ -40,7 +40,7 @@ public class News {
 	private CulturalOffer culturalOffer;
 	
 	@ManyToOne (fetch = FetchType.EAGER , cascade = CascadeType.ALL)
-	private Moderator moderator;
+	private Administrator administrator;
 	
 //	@JoinColumn(name = "image_id") ...pitanje-JoinColumn ili PrimaryKeyJoinColumn?
 	@PrimaryKeyJoinColumn
@@ -57,23 +57,24 @@ public class News {
 		this.creationDate = creationDate;
 	}
 
-	public News(String title, String text, Date creationDate, CulturalOffer culturalOffer, Moderator moderator,
+	public News(String title, String text, Date creationDate, CulturalOffer culturalOffer, Administrator administrator,
 			Set<Image> images) {
 		super();
 		this.title = title;
 		this.text = text;
 		this.creationDate = creationDate;
 		this.culturalOffer = culturalOffer;
-		this.moderator = moderator;
+		this.administrator = administrator;
 		this.images = images;
 	}
 
-	public Moderator getModerator() {
-		return moderator;
+
+	public Administrator getAdministrator() {
+		return administrator;
 	}
 
-	public void setModerator(Moderator moderator) {
-		this.moderator = moderator;
+	public void setAdministrator(Administrator administrator) {
+		this.administrator = administrator;
 	}
 
 	public Long getId() {
@@ -128,6 +129,6 @@ public class News {
 	@Override
 	public String toString() {
 		return "News [id=" + id + ", title=" + title + ", text=" + text + ", creationDate=" + creationDate
-				+ ", culturalOffer=" + culturalOffer + ", moderator=" + moderator + ", images=" + images + "]";
+				+ ", culturalOffer=" + culturalOffer + ", administrator=" + administrator + ", images=" + images + "]";
 	}
 }

@@ -16,12 +16,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-@Table(name = "user")
+@Table(name = "user_table")
 public class User {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	@Column(name = "user_id")
 	private Long id;
 	
@@ -40,9 +39,8 @@ public class User {
 	@Column(name = "email" , unique = false , nullable = false)
 	private String email;
 
-	//Dodati na dijagram
-	@OneToMany(mappedBy = "users" ,fetch = FetchType.LAZY , cascade = CascadeType.ALL)
-	private Set<CulturalOffer> culturalOffersSubscribed; // Kulturne ponude na koje je user pretplacen. SUBSCRIBED
+	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+	private Set<CulturalOffer> culturalOffersSubscribed;
 	
 	public User() {
 		

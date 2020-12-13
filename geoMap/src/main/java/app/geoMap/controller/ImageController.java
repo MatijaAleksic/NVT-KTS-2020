@@ -19,6 +19,7 @@ import app.geoMap.model.Image;
 import app.geoMap.service.ImageService;
 
 @RestController
+@RequestMapping(value =  "/api/images", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ImageController {
 
 

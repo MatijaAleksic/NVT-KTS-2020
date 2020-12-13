@@ -19,6 +19,7 @@ import app.geoMap.model.Administrator;
 import app.geoMap.service.AdministratorService;
 
 @RestController
+@RequestMapping(value =  "/api/administrators", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdministratorController {
 	@Autowired
     private AdministratorService administratorService;

@@ -50,8 +50,9 @@ public class CulturalOffer {
 	@Column(name = "latitude" , nullable = false , unique = false)
 	private float latitude;
 	
-	@Column(name = "moderator" , nullable = false , unique = false)
-	private Moderator moderator;
+	@PrimaryKeyJoinColumn
+	@ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+	private Administrator administrator;
 	
 	@OneToMany(mappedBy = "culturalOffer", fetch = FetchType.LAZY , cascade = CascadeType.ALL)
 	private Set<Rating> ratings;
@@ -89,7 +90,7 @@ public class CulturalOffer {
 	
 	
 	public CulturalOffer(String name, Date creationDate, String description, String email, String phone,
-			float longitude, float latitude, Moderator moderator, Set<Rating> ratings, Set<Comment> comments, Set<News> news,
+			float longitude, float latitude, Administrator administrator, Set<Rating> ratings, Set<Comment> comments, Set<News> news,
 			CultureType cultureType, CultureSubtype cultureSubtype, Set<Image> images) {
 		super();
 		this.name = name;
@@ -99,7 +100,7 @@ public class CulturalOffer {
 		this.phone = phone;
 		this.longitude = longitude;
 		this.latitude = latitude;
-		this.moderator = moderator;
+		this.administrator = administrator;
 		this.ratings = ratings;
 		this.comments = comments;
 		this.news = news;
@@ -225,19 +226,16 @@ public class CulturalOffer {
 	public String toString() {
 		return "CulturalOffer [id=" + id + ", name=" + name + ", creationDate=" + creationDate + ", description="
 				+ description + ", email=" + email + ", phone=" + phone + ", longitude=" + longitude + ", latitude="
-				+ latitude + ", moderator =" + moderator + ", raitings=" + ratings + ", comments=" + comments + ", news=" + news + ", cultureType="
+				+ latitude + ", administrator =" + administrator + ", raitings=" + ratings + ", comments=" + comments + ", news=" + news + ", cultureType="
 				+ cultureType + ", cultureSubtype=" + cultureSubtype + ", images=" + images + "]";
 	}
 
-	public Moderator getModerator() {
-		return moderator;
+	public Administrator getAdministrator() {
+		return administrator;
 	}
 
-	public void setModerator(Moderator moderator) {
-		this.moderator = moderator;
+	public void setAdministrator(Administrator administrator) {
+		this.administrator = administrator;
 	}
-	
-	 
-	
-	
+
 }

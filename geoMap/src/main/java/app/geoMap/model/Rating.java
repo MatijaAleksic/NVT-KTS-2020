@@ -1,5 +1,7 @@
 package app.geoMap.model;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -28,6 +31,10 @@ public class Rating {
 	@OneToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
 	private User user;
 	
+	@ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+	private CulturalOffer culturalOffer;
+	
+
 	public Rating() {	
 		
 	}
@@ -67,6 +74,14 @@ public class Rating {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	public CulturalOffer getCulturalOffer() {
+		return culturalOffer;
+	}
+
+	public void setCulturalOffer(CulturalOffer culturalOffer) {
+		this.culturalOffer = culturalOffer;
 	}
 
 	@Override

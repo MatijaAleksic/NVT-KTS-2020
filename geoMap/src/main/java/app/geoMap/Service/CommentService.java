@@ -32,11 +32,10 @@ public class CommentService implements ServiceInterface<Comment>{
 
 	@Override
 	public Comment create(Comment entity) throws Exception {
-		return null;
-//		if(commentRepository.findByUsername(entity.getText()) != null){
-//            throw new Exception("User with username already exists");
-//        }
-//        return commentRepository.save(entity);
+		if(commentRepository.findByText(entity.getText()) != null){
+            throw new Exception("User with username already exists");
+        }
+        return commentRepository.save(entity);
 	}
 
 	@Override

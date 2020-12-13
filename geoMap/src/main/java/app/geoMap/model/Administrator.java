@@ -20,18 +20,15 @@ public class Administrator extends User{
 	
 	@PrimaryKeyJoinColumn
 	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-	private Set<Moderator> allModerators;
-	
-	@PrimaryKeyJoinColumn
-	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	private Set<CultureType> allCultureType;
 	
 	@PrimaryKeyJoinColumn
 	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	private Set<CultureSubtype> allCultureSubtype;
-
 	
-	
+	@PrimaryKeyJoinColumn
+	@OneToMany( fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+	private Set<CulturalOffer> culturalOffersCreated;
 	
 	public Administrator() {
 		
@@ -41,13 +38,21 @@ public class Administrator extends User{
 		super(firstName,lastName, userName, password, email);
 	}
 	
-	public Administrator(Set<User> allUsers, Set<Moderator> allModerators, Set<CultureType> allCultureType,
-			Set<CultureSubtype> allCultureSubtype) {
+	public Administrator(Set<User> allUsers, Set<CultureType> allCultureType,
+			Set<CultureSubtype> allCultureSubtype, Set<CulturalOffer> culturalOffersCreated) {
 		super();
 		this.allUsers = allUsers;
-		this.allModerators = allModerators;
 		this.allCultureType = allCultureType;
 		this.allCultureSubtype = allCultureSubtype;
+		this.culturalOffersCreated = culturalOffersCreated;
+	}
+
+	public Set<CulturalOffer> getCulturalOffersCreated() {
+		return culturalOffersCreated;
+	}
+
+	public void setCulturalOffersCreated(Set<CulturalOffer> culturalOffersCreated) {
+		this.culturalOffersCreated = culturalOffersCreated;
 	}
 
 	public Set<User> getAllUsers() {
@@ -56,14 +61,6 @@ public class Administrator extends User{
 
 	public void setAllUsers(Set<User> allUsers) {
 		this.allUsers = allUsers;
-	}
-
-	public Set<Moderator> getAllModerators() {
-		return allModerators;
-	}
-
-	public void setAllModerators(Set<Moderator> allModerators) {
-		this.allModerators = allModerators;
 	}
 
 	public Set<CultureType> getAllCultureType() {
@@ -84,7 +81,7 @@ public class Administrator extends User{
 
 	@Override
 	public String toString() {
-		return "Administrator [allUsers=" + allUsers + ", allModerators=" + allModerators + ", allCultureType="
+		return "Administrator [allUsers=" + allUsers + ", allCultureType="
 				+ allCultureType + ", allCultureSubtype=" + allCultureSubtype + "]";
 	}
 	

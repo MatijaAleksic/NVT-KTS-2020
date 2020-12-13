@@ -19,6 +19,7 @@ import app.geoMap.model.Comment;
 import app.geoMap.service.CommentService;
 
 @RestController
+@RequestMapping(value =  "/api/comments", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CommentController {
 	@Autowired
     private CommentService commentService;
@@ -32,7 +33,7 @@ public class CommentController {
         return new ResponseEntity<>(toCommentDTOList(comments), HttpStatus.OK);
     }
 
-    @RequestMapping(value="/{id}", method=RequestMethod.GET)
+    @RequestMapping(value="/get-comment{id}", method=RequestMethod.GET)
     public ResponseEntity<CommentDTO> getComment(@PathVariable Long id){
     	Comment comment = commentService.findOne(id);
         if(comment == null){
@@ -66,7 +67,7 @@ public class CommentController {
         return new ResponseEntity<>(commentMapper.toDto(comment), HttpStatus.OK);
     }
 
-    @RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+    @RequestMapping(value="/delete-comment{id}", method=RequestMethod.DELETE)
     public ResponseEntity<Void> deleteComment(@PathVariable Long id){
         try {
         	commentService.delete(id);

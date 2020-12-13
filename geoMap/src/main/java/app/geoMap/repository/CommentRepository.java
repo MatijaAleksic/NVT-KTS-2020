@@ -7,5 +7,7 @@ import app.geoMap.model.Comment;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long>{
+	
+	Comment findByText(String text);
 
 }
