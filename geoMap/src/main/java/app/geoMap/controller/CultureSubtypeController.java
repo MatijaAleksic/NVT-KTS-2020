@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ public class CultureSubtypeController {
 	
 	private CultureSubtypeMapper cultureSubtypeMapper;
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<CultureSubtypeDTO>> getAllCultureSubtypes(@PathVariable Long cultureTypeId){
 		List<CultureSubtype> cultureSubtypes = cultureSubtypeService.findAll(cultureTypeId);
@@ -34,7 +36,7 @@ public class CultureSubtypeController {
 		return new ResponseEntity<>(toCultureSubtypeDTOList(cultureSubtypes),HttpStatus.OK);
 	}
 
-	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<CultureSubtypeDTO> getCultureSubtype(@PathVariable ("typeId") Long typeId, @PathVariable("id") Long id){
 		CultureSubtype cultureSubtype = cultureSubtypeService.findOne(typeId, id);
@@ -45,6 +47,7 @@ public class CultureSubtypeController {
 		return new ResponseEntity<>(cultureSubtypeMapper.toDto(cultureSubtype), HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CultureSubtypeDTO> createCultureSubtype(@RequestBody CultureSubtypeDTO culturalSubtypeDTO, @PathVariable Long typeId){
 		CultureSubtype cultureSubtype;
@@ -57,6 +60,7 @@ public class CultureSubtypeController {
 		return new ResponseEntity<>(cultureSubtypeMapper.toDto(cultureSubtype), HttpStatus.CREATED);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CultureSubtypeDTO> updateCultureSubtype(@RequestBody CultureSubtypeDTO culturalSubtypeDTO, @PathVariable Long typeId, @PathVariable Long id){
 		CultureSubtype cultureSubtype;
@@ -69,6 +73,7 @@ public class CultureSubtypeController {
 		return new ResponseEntity<>(cultureSubtypeMapper.toDto(cultureSubtype), HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	public ResponseEntity<Void> deleteCultureSubtype(@PathVariable Long typeId, @PathVariable Long id){
 		try {

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ public class CulturalOfferController {
 
     private CulturalOfferMapper culturalOfferMapper;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<CulturalOfferDTO>> getAllCulturalOffers() {
         List<CulturalOffer> culturalOffers = culturalOfferService.findAll();
@@ -33,6 +35,7 @@ public class CulturalOfferController {
         return new ResponseEntity<>(toCulturalOfferDTOList(culturalOffers), HttpStatus.OK);
     }
 
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<CulturalOfferDTO> getCulturalOffer(@PathVariable Long id){
     	CulturalOffer culturalOffer = culturalOfferService.findOne(id);
@@ -43,6 +46,7 @@ public class CulturalOfferController {
         return new ResponseEntity<>(culturalOfferMapper.toDto(culturalOffer), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CulturalOfferDTO> createCulturalOffer(@RequestBody CulturalOfferDTO culturalOfferDTO){
     	CulturalOffer culturalOffer;
@@ -55,6 +59,7 @@ public class CulturalOfferController {
         return new ResponseEntity<>(culturalOfferMapper.toDto(culturalOffer), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CulturalOfferDTO> updateCulturalOffer(@RequestBody CulturalOfferDTO culturalOffersDTO, @PathVariable Long id){
     	CulturalOffer culturalOffer;
@@ -67,6 +72,7 @@ public class CulturalOfferController {
         return new ResponseEntity<>(culturalOfferMapper.toDto(culturalOffer), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.DELETE)
     public ResponseEntity<Void> deleteCulturalOffer(@PathVariable Long id){
         try {

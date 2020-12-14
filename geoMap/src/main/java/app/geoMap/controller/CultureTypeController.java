@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,7 @@ public class CultureTypeController {
 	private CultureSubtypeMapper cultureSubtypeMapper;
 	*/
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value= "/by-page",method = RequestMethod.GET)
 	public ResponseEntity<Page<CultureTypeDTO>> getAllCultureTypes(Pageable pageable){
 		Page<CultureType> page = cultureTypeService.findAll(pageable);
@@ -46,6 +48,7 @@ public class CultureTypeController {
 		return new ResponseEntity<>(pageCultureTypeDTOS, HttpStatus.OK);	
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<CultureTypeDTO> getCultureType(@PathVariable Long id){
 		CultureType cultureType = cultureTypeService.findOne(id);
@@ -56,6 +59,7 @@ public class CultureTypeController {
 		return new ResponseEntity<>(cultureTypeMapper.toDto(cultureType), HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CultureTypeDTO> createCultureType(@RequestBody CultureTypeDTO culturalTypeDTO){
 		CultureType cultureType;
@@ -68,6 +72,7 @@ public class CultureTypeController {
 		return new ResponseEntity<>(cultureTypeMapper.toDto(cultureType), HttpStatus.CREATED);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CultureTypeDTO> updateCultureType(@RequestBody CultureTypeDTO culturalTypeDTO, @PathVariable Long id){
 		CultureType cultureType;
@@ -80,6 +85,7 @@ public class CultureTypeController {
 		return new ResponseEntity<>(cultureTypeMapper.toDto(cultureType), HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	public ResponseEntity<Void> deleteCultureType(@PathVariable Long id){
 		try {
