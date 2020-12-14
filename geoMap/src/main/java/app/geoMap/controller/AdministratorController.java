@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,12 +27,15 @@ public class AdministratorController {
 
     private AdministratorMapper administratorMapper;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<AdministratorDTO>> getAllAdministrators() {
         List<Administrator> administrators = administratorService.findAll();
 
         return new ResponseEntity<>(toAdministratorsDTOList(administrators), HttpStatus.OK);
     }
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<AdministratorDTO> getAdministrator(@PathVariable Long id){
     	Administrator administrator = administratorService.findOne(id);
@@ -42,6 +46,7 @@ public class AdministratorController {
         return new ResponseEntity<>(administratorMapper.toDto(administrator), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AdministratorDTO> createAdministrator(@RequestBody AdministratorDTO administratorDTO){
     	Administrator administrator;
@@ -54,6 +59,7 @@ public class AdministratorController {
         return new ResponseEntity<>(administratorMapper.toDto(administrator), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AdministratorDTO> updateAdministrator(@RequestBody AdministratorDTO administratorDTO, @PathVariable Long id){
     	Administrator administrator;
@@ -66,6 +72,7 @@ public class AdministratorController {
         return new ResponseEntity<>(administratorMapper.toDto(administrator), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.DELETE)
     public ResponseEntity<Void> deleteAdministrator(@PathVariable Long id){
         try {

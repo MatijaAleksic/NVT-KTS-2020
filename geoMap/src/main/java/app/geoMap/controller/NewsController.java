@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ public class NewsController {
 
     private NewsMapper NewsMapper;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<NewsDTO>> getAllNews() {
         List<News> news = NewsService.findAll();
@@ -35,6 +37,7 @@ public class NewsController {
         return new ResponseEntity<>(toNewsDTOList(news), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<NewsDTO> getNews(@PathVariable Long id){
     	News news = NewsService.findOne(id);
@@ -45,6 +48,7 @@ public class NewsController {
         return new ResponseEntity<>(NewsMapper.toDto(news), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NewsDTO> createNews(@RequestBody NewsDTO newsDTO){
     	News news;
@@ -57,6 +61,7 @@ public class NewsController {
         return new ResponseEntity<>(NewsMapper.toDto(news), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NewsDTO> updateNews(@RequestBody NewsDTO newsDTO, @PathVariable Long id){
     	News news;
@@ -69,6 +74,7 @@ public class NewsController {
         return new ResponseEntity<>(NewsMapper.toDto(news), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.DELETE)
     public ResponseEntity<Void> deleteNews(@PathVariable Long id){
         try {

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ public class ImageController {
 
     private ImageMapper ImageMapper;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<ImageDTO>> getAllImages() {
         List<Image> images = ImageService.findAll();
@@ -35,6 +37,7 @@ public class ImageController {
         return new ResponseEntity<>(toImagesDTOList(images), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<ImageDTO> getImage(@PathVariable Long id){
     	Image image = ImageService.findOne(id);
@@ -45,6 +48,7 @@ public class ImageController {
         return new ResponseEntity<>(ImageMapper.toDto(image), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ImageDTO> createImage(@RequestBody ImageDTO imageDTO){
     	Image image;
@@ -57,6 +61,7 @@ public class ImageController {
         return new ResponseEntity<>(ImageMapper.toDto(image), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ImageDTO> updateImage(@RequestBody ImageDTO imageDTO, @PathVariable Long id){
     	Image image;
@@ -69,6 +74,7 @@ public class ImageController {
         return new ResponseEntity<>(ImageMapper.toDto(image), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.DELETE)
     public ResponseEntity<Void> deleteImage(@PathVariable Long id){
         try {

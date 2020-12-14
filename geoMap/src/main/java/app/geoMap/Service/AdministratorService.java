@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import app.geoMap.model.Administrator;
+import app.geoMap.model.Authority;
 import app.geoMap.repository.AdministratorRepository;
 
 @Service
@@ -15,6 +17,12 @@ public class AdministratorService implements ServiceInterface<Administrator>{
 
 	@Autowired
 	private AdministratorRepository administratorRepository;
+	
+	@Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthorityService authService;
 
 	@Override
 	public List<Administrator> findAll() {
@@ -35,7 +43,19 @@ public class AdministratorService implements ServiceInterface<Administrator>{
 		if(administratorRepository.findById(entity.getId()) != null){
             throw new Exception("User with given email address already exists");
         }
-        return administratorRepository.save(entity);
+		Administrator u = new Administrator();
+        u.setUserName(entity.getUsername());
+        u.setPassword(passwordEncoder.encode(entity.getPassword()));
+        u.setFirstName(entity.getFirstName());
+        u.setLastName(entity.getLastName());
+        u.setEmail(entity.getEmail());
+
+        List<Authority> auth = authService.findByName("ROLE_USER");
+        u.setAuthorities(auth);
+
+        u = this.administratorRepository.save(u);
+        return u;
+        
 	}
 
 	@Override

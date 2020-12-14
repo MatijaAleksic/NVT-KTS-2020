@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 
 import app.geoMap.model.CultureSubtype;
 import app.geoMap.model.CultureType;
-import app.geoMap.model.User;
 import app.geoMap.repository.CultureSubtypeRepository;
-import app.geoMap.repository.CultureTypeRepository;
 
 @Service
 public class CultureSubtypeService implements ServiceInterface<CultureSubtype>{

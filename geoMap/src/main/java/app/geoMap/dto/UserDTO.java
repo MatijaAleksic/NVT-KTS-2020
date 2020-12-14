@@ -1,7 +1,5 @@
 package app.geoMap.dto;
 
-import java.util.Set;
-import app.geoMap.model.CulturalOffer;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 

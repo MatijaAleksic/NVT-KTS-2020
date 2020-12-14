@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,8 @@ public class RatingController {
 
     private RatingMapper ratingMapper;
 
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<RatingDTO>> getAllRatings() {
         List<Rating> ratings = ratingService.findAll();
@@ -34,6 +37,7 @@ public class RatingController {
         return new ResponseEntity<>(toRatingDTOList(ratings), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<RatingDTO> getRating(@PathVariable Long id){
     	Rating rating = ratingService.findOne(id);
@@ -44,6 +48,7 @@ public class RatingController {
         return new ResponseEntity<>(ratingMapper.toDto(rating), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RatingDTO> createRating(@RequestBody RatingDTO ratingDTO){
     	Rating rating;
@@ -56,6 +61,7 @@ public class RatingController {
         return new ResponseEntity<>(ratingMapper.toDto(rating), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RatingDTO> updateRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long id){
     	Rating rating;
@@ -68,6 +74,7 @@ public class RatingController {
         return new ResponseEntity<>(ratingMapper.toDto(rating), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")	
     @RequestMapping(value="/{id}", method=RequestMethod.DELETE)
     public ResponseEntity<Void> deleteRating(@PathVariable Long id){
         try {
