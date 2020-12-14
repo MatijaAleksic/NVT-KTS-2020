@@ -5,13 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import app.geoMap.model.Authority;
 import app.geoMap.model.User;
 import app.geoMap.repository.UserRepository;
 
-import app.geoMap.model.CulturalOffer;
-import app.geoMap.repository.CulturalOfferRepository;
 
 @Service
 public class UserService implements ServiceInterface<User>{
@@ -20,9 +20,12 @@ public class UserService implements ServiceInterface<User>{
 	private UserRepository userRepository;
 	
 	@Autowired
-	private CulturalOfferRepository culturalOfferRepository;
-	
-	
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthorityService authService;
+    
+    
 	@Override
 	public List<User> findAll() {
 		return userRepository.findAll();
@@ -43,7 +46,19 @@ public class UserService implements ServiceInterface<User>{
 		if(userRepository.findByUserName(entity.getUserName()) != null){
             throw new Exception("User with username already exists");
         }
-        return userRepository.save(entity);
+        
+        User u = new User();
+        u.setUserName(entity.getUsername());
+        u.setPassword(passwordEncoder.encode(entity.getPassword()));
+        u.setFirstName(entity.getFirstName());
+        u.setLastName(entity.getLastName());
+        u.setEmail(entity.getEmail());
+
+        List<Authority> auth = authService.findByName("ROLE_USER");
+        u.setAuthorities(auth);
+
+        u = this.userRepository.save(u);
+        return u;
 	}
 
 	@Override

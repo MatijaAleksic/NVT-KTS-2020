@@ -6,10 +6,12 @@ import app.geoMap.dto.UserDTO;
 import app.geoMap.helper.UserMapper;
 import app.geoMap.model.User;
 import app.geoMap.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,7 @@ public class UserController {
 
     private UserMapper userMapper;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<User> users = userService.findAll();
@@ -35,6 +38,7 @@ public class UserController {
         return new ResponseEntity<>(toUserDTOList(users), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id){
         User user = userService.findOne(id);
@@ -45,6 +49,7 @@ public class UserController {
         return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO){
         User user;
@@ -56,7 +61,8 @@ public class UserController {
 
         return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.CREATED);
     }
-
+    
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO, @PathVariable Long id){
         User user;
@@ -69,6 +75,8 @@ public class UserController {
         return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
     }
 
+    //@PreAuthorize("hasRole('ROLE_USER')"+" && hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.DELETE)
     public ResponseEntity<Void> deleteUser(@PathVariable Long id){
         try {

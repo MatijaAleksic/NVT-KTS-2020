@@ -26,11 +26,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "user_table")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class User implements UserDetails{
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
-	@Column(name = "user_id")
+	@Column(name = "id")
 	private Long id;
 	
 	@Column(name = "first_name" , nullable = false , unique = false)

@@ -1,9 +1,5 @@
 package app.geoMap.config;
 
-import app.geoMap.security.TokenUtils;
-import app.geoMap.security.auth.RestAuthenticationEntryPoint;
-import app.geoMap.security.auth.TokenAuthenticationFilter;
-import app.geoMap.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +14,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import app.geoMap.security.TokenUtils;
+import app.geoMap.security.auth.RestAuthenticationEntryPoint;
+import app.geoMap.security.auth.TokenAuthenticationFilter;
+import app.geoMap.service.CustomUserDetailsService;
 
 @Configuration
 // Ukljucivanje podrske za anotacije "@Pre*" i "@Post*" koje ce aktivirati autorizacione provere za svaki pristup metodi

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ public class CommentController {
 
     private CommentMapper commentMapper;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<CommentDTO>> getAllComments() {
         List<Comment> comments = commentService.findAll();
@@ -33,6 +35,7 @@ public class CommentController {
         return new ResponseEntity<>(toCommentDTOList(comments), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value="/get-comment{id}", method=RequestMethod.GET)
     public ResponseEntity<CommentDTO> getComment(@PathVariable Long id){
     	Comment comment = commentService.findOne(id);
@@ -43,6 +46,7 @@ public class CommentController {
         return new ResponseEntity<>(commentMapper.toDto(comment), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommentDTO> createComment(@RequestBody CommentDTO commentDTO){
     	Comment comment;
@@ -54,7 +58,8 @@ public class CommentController {
 
         return new ResponseEntity<>(commentMapper.toDto(comment), HttpStatus.CREATED);
     }
-
+    
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommentDTO> updateComment(@RequestBody CommentDTO commentDTO, @PathVariable Long id){
     	Comment comment;

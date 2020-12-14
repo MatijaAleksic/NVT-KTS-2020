@@ -17,11 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.geoMap.model.CultureType;
-import app.geoMap.service.CultureSubtypeService;
 import app.geoMap.service.CultureTypeService;
-import app.geoMap.dto.CultureSubtypeDTO;
 import app.geoMap.dto.CultureTypeDTO;
-import app.geoMap.helper.CultureSubtypeMapper;
 import app.geoMap.helper.CultureTypeMapper;
 
 @RestController
