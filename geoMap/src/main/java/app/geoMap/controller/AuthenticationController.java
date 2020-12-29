@@ -54,13 +54,10 @@ public class AuthenticationController {
     public ResponseEntity<?> createAuthenticationToken(@RequestBody UserLoginDTO authenticationRequest,
                                                                     HttpServletResponse response) {
 
-    	System.out.println("Login usao!");
-    	System.out.println("user:" + authenticationRequest.getUsername() + " password: " +authenticationRequest.getPassword());
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
                         authenticationRequest.getPassword()));
 
-        System.out.println("Prosao autenticate!");
         // Ubaci korisnika u trenutni security kontekst
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -70,7 +67,6 @@ public class AuthenticationController {
         int expiresIn = tokenUtils.getExpiredIn();
 
         // Vrati token kao odgovor na uspesnu autentifikaciju
-        System.out.println("A!");
         return ResponseEntity.ok(new UserTokenStateDTO(jwt, expiresIn));
     }
 

@@ -7,18 +7,26 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
 @Entity
 @Table(name = "user_table")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(
-		name = "user_type",
-		discriminatorType = DiscriminatorType.STRING
-)
-@DiscriminatorValue(value = "USER")
 public class User implements UserDetails{
 
 	@Id
@@ -26,19 +34,19 @@ public class User implements UserDetails{
 	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "first_name" , nullable = true , unique = false)
+	@Column(name = "first_name" , nullable = false , unique = false)
 	private String firstName;
 	
-	@Column(name = "last_name" , unique = false , nullable = true)
+	@Column(name = "last_name" , unique = false , nullable = false)
 	private String lastName;
 	
-	@Column(name = "user_name" , unique = false , nullable = true)
+	@Column(name = "user_name" , unique = false , nullable = false)
 	private String userName;
 	
-	@Column(name = "pasword"  , unique = false , nullable = true)
+	@Column(name = "pasword"  , unique = false , nullable = false)
 	private String password;
 	
-	@Column(name = "email" , unique = false , nullable = true)
+	@Column(name = "email" , unique = false , nullable = false)
 	private String email;
 	
 	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)

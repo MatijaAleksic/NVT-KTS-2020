@@ -3,7 +3,6 @@ package app.geoMap.model;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -12,7 +11,6 @@ import javax.persistence.Table;
 
 
 @Entity
-@DiscriminatorValue(value = "ADMINISTRATOR")
 public class Administrator extends User{
 	
 	@PrimaryKeyJoinColumn
