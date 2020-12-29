@@ -27,8 +27,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "user_table")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="user_type", discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue("USER")
+@DiscriminatorColumn(
+		name = "user_type",
+		discriminatorType = DiscriminatorType.STRING
+)
+@DiscriminatorValue(value = "USER")
 public class User implements UserDetails{
 
 	@Id

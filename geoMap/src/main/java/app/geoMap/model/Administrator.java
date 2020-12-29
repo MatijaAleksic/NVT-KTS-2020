@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@DiscriminatorValue("ADMINISTRATOR")
+@DiscriminatorValue(value = "ADMINISTRATOR")
 public class Administrator extends User{
 	
 	@PrimaryKeyJoinColumn
