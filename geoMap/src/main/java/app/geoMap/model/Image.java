@@ -16,10 +16,10 @@ public class Image {
 	@Column(name = "image_id")
 	private Long id;
 	
-	@Column(name = "name",unique = true, nullable = false)
+	@Column(name = "name",unique = false, nullable = true)
 	private String name;
 	
-	@Column(name = "picByte", length = 1000)
+	@Column(name = "picByte", length = 1000, nullable = true)
 	private byte[] picByte;
 
 	

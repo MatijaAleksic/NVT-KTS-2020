@@ -27,26 +27,30 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "user_table")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="user_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("USER")
 public class User implements UserDetails{
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(generator = "user_sequence", strategy = GenerationType.SEQUENCE)
+	@SequenceGenerator(name = "user_sequence", sequenceName = "USER_SEQUENCE")
 	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "first_name" , nullable = false , unique = false)
+	@Column(name = "first_name" , nullable = true , unique = false)
 	private String firstName;
 	
-	@Column(name = "last_name" , unique = false , nullable = false)
+	@Column(name = "last_name" , unique = false , nullable = true)
 	private String lastName;
 	
-	@Column(name = "user_name" , unique = false , nullable = false)
+	@Column(name = "user_name" , unique = false , nullable = true)
 	private String userName;
 	
-	@Column(name = "pasword"  , unique = false , nullable = false)
+	@Column(name = "pasword"  , unique = false , nullable = true)
 	private String password;
 	
-	@Column(name = "email" , unique = false , nullable = false)
+	@Column(name = "email" , unique = false , nullable = true)
 	private String email;
 	
 	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
@@ -57,7 +61,7 @@ public class User implements UserDetails{
 	@Column(name = "last_password_reset_date")
     private Timestamp lastPasswordResetDate;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)//EAGER BILO
     @JoinTable(name = "user_authority",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
@@ -68,6 +72,11 @@ public class User implements UserDetails{
 		
 	}
 	
+	public User(String userName, String email) {
+		super();
+		this.userName = userName;
+		this.email = email;
+	}
 	public User(String firstName, String lastName, String userName, String password, String email) {
 		super();
 		this.firstName = firstName;

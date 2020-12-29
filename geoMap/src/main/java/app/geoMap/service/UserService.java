@@ -43,22 +43,10 @@ public class UserService implements ServiceInterface<User>{
 	
 	@Override
 	public User create(User entity) throws Exception {
-		if(userRepository.findByUserName(entity.getUserName()) != null){
+		if(userRepository.findByEmail(entity.getEmail()) != null){
             throw new Exception("User with username already exists");
         }
-        
-        User u = new User();
-        u.setUserName(entity.getUsername());
-        u.setPassword(passwordEncoder.encode(entity.getPassword()));
-        u.setFirstName(entity.getFirstName());
-        u.setLastName(entity.getLastName());
-        u.setEmail(entity.getEmail());
-
-        List<Authority> auth = authService.findByName("ROLE_USER");
-        u.setAuthorities(auth);
-
-        u = this.userRepository.save(u);
-        return u;
+        return this.userRepository.save(entity);
 	}
 
 	@Override

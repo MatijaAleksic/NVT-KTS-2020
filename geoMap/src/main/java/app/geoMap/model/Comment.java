@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -22,7 +23,7 @@ public class Comment {
 	@Column(name = "comment_id")
 	private Long id;
 	
-	@Column(name = "text" , unique = false , nullable = false)
+	@Column(name = "text" , unique = false , nullable = true)
 	private String text;
 	
 	@PrimaryKeyJoinColumn

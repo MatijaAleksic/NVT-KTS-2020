@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -24,7 +25,7 @@ public class Rating {
 	@Column(name = "rating_id")
 	private Long id;
 	
-	@Column(name = "value" , nullable = false ,unique = false)
+	@Column(name = "value" , nullable = true ,unique = false)
 	private float value;
 	
 	@PrimaryKeyJoinColumn

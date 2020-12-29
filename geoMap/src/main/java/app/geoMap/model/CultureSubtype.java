@@ -19,7 +19,7 @@ public class CultureSubtype {
 	@Column(name = "culture_subtype_id")
 	private Long id;
 	
-	@Column(name = "name" , unique = true , nullable = false)
+	@Column(name = "name" , unique = true , nullable = true)
 	private String name;
 	
 	@ManyToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
