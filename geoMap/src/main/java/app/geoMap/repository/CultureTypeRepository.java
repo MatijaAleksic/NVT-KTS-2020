@@ -14,6 +14,8 @@ public interface CultureTypeRepository extends JpaRepository<CultureType, Long>{
 	
 	CultureType findByNameAndIdNot(String name, Long id);
 	
+	List<CultureType> findByTypeId(Long typeId);
 	
+	CultureType findByTypeIdAndId(Long typeId, Long id);
 
 }

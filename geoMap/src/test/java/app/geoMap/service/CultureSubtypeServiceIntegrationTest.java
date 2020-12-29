@@ -37,26 +37,26 @@ public class CultureSubtypeServiceIntegrationTest {
 	public void testFindAll() {
 		List<CultureSubtype> found = cultureSubtypeService.findAll();
 		
-		assertEquals(FIND_ALL_SUBTYPES, found.size());
+		assertEquals(FIND_ALL_NUMBER_OF_ITEMS, found.size());
 	}
 	
 	@Test
 	public void testFindById() {
-		CultureSubtype found = cultureSubtypeService.findOne(SUBTYPE_ID);
+		CultureSubtype found = cultureSubtypeService.findOne(SUBTYPE1_ID);
 		
-		assertEquals(SUBTYPE_ID, found.getId());
+		assertEquals(SUBTYPE1_ID, found.getId());
 	}
 	
 	@Test
 	public void testCreate() throws Exception {
-		CultureSubtype cultureSubtype = new CultureSubtype(NEW_SUBTYPE);
-		//CultureType cultureType = new CultureType(DB_TYPE_ID, DB_TYPE  );
+		CultureSubtype cultureSubtype = new CultureSubtype(NEW_SUBTYPE1);
+		CultureType cultureType = new CultureType(DB_TYPE_ID, DB_TYPE  );
 		
-		//cultureSubtype.setCultureType(cultureType);
+		cultureSubtype.setCultureType(cultureType);
 		CultureSubtype created = cultureSubtypeService.create(cultureSubtype);
 		
 		
-		assertEquals(NEW_SUBTYPE, created.getName());
+		assertEquals(NEW_SUBTYPE1, created.getName());
 		
 	}
 	
@@ -74,13 +74,13 @@ public class CultureSubtypeServiceIntegrationTest {
 	
 	@Test
 	public void testUpdate() throws Exception {
-		CultureSubtype cultureSubtype = new CultureSubtype(NEW_SUBTYPE);
-		//CultureType cultureType = new CultureType(DB_TYPE);
+		CultureSubtype cultureSubtype = new CultureSubtype(NEW_SUBTYPE1);
+		CultureType cultureType = new CultureType(DB_TYPE);
 		
-		//cultureSubtype.setCultureType(cultureType);
-		CultureSubtype created = cultureSubtypeService.update(cultureSubtype, SUBTYPE_ID);
+		cultureSubtype.setCultureType(cultureType);
+		CultureSubtype created = cultureSubtypeService.update(cultureSubtype, SUBTYPE1_ID);
 		
-		assertEquals(NEW_SUBTYPE, created.getName());
+		assertEquals(NEW_SUBTYPE1, created.getName());
 		
 	}
 	

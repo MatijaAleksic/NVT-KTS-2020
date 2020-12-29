@@ -41,29 +41,17 @@ public class CultureSubtypeServiceUnitTest {
 	@Before
 	public void setUp() {
 		List<CultureSubtype> cultureSubtypes = new ArrayList<>();
-		cultureSubtypes.add(new CultureSubtype(NEW_SUBTYPE));
+		cultureSubtypes.add(new CultureSubtype(NEW_SUBTYPE1));
 		cultureSubtypes.add(new CultureSubtype(NEW_SUBTYPE2));
 		
 		
 		given(cultureSubtypeRepository.findAll()).willReturn(cultureSubtypes);
 		
-		CultureSubtype cultureSubtype = new CultureSubtype(NEW_SUBTYPE);
-		CultureSubtype savedCultureSubtype = new CultureSubtype(NEW_SUBTYPE);
-		savedCultureSubtype.setId(SUBTYPE_ID);
-		
-		given(cultureSubtypeRepository.findById(SUBTYPE_ID)).willReturn(java.util.Optional.of(savedCultureSubtype));
-		given(cultureSubtypeRepository.findByName(NEW_SUBTYPE)).willReturn(cultureSubtype);
-		
-		CultureSubtype cultureSubtypeFound = new CultureSubtype(DB_SUBTYPE);
-		given(cultureSubtypeRepository.findByName(DB_SUBTYPE)).willReturn(cultureSubtypeFound);
-		
-		given(cultureSubtypeRepository.save(cultureSubtype)).willReturn(savedCultureSubtype);
-		
-		doNothing().when(cultureSubtypeRepository).delete(savedCultureSubtype);
-		
-		
+		CultureSubtype cultureSubtype = new CultureSubtype(NEW_SUBTYPE1);
+		CultureSubtype savedCultureSubtype = new CultureSubtype(NEW_SUBTYPE1);
+		savedCultureSubtype.setId(DB_SUBTYPE_ID);
 	}
-	/*
+	
 	@Test
 	public void testFindAll() {
 		List<CultureSubtype> found = cultureSubtypeService.findAll();
@@ -78,20 +66,20 @@ public class CultureSubtypeServiceUnitTest {
 		
 		verify(cultureSubtypeRepository, times(1)).findById(SUBTYPE1_ID);
 		assertEquals(SUBTYPE1_ID, found.getId());
-	}*/
+	}
 	
 	@Test
 	public void testCreate() throws Exception {
-		CultureSubtype cultureSubtype = new CultureSubtype(NEW_SUBTYPE);
-		//CultureType cultureType = new CultureType(DB_TYPE_ID, DB_TYPE  );
+		CultureSubtype cultureSubtype = new CultureSubtype(NEW_SUBTYPE1);
+		CultureType cultureType = new CultureType(DB_TYPE_ID, DB_TYPE  );
 		
-		//cultureSubtype.setCultureType(cultureType);
+		cultureSubtype.setCultureType(cultureType);
 		CultureSubtype created = cultureSubtypeService.create(cultureSubtype);
 		
-		verify(cultureSubtypeRepository, times(1)).findByName(NEW_SUBTYPE);
+		verify(cultureSubtypeRepository, times(1)).findByName(NEW_SUBTYPE1);
 		verify(cultureSubtypeRepository, times(1)).save(cultureSubtype);
 		
-		assertEquals(NEW_SUBTYPE, created.getName());
+		assertEquals(NEW_SUBTYPE1, created.getName());
 		
 	}
 	
@@ -110,31 +98,28 @@ public class CultureSubtypeServiceUnitTest {
 	
 	@Test
 	public void testUpdate() throws Exception {
-		CultureSubtype cultureSubtype = new CultureSubtype(NEW_SUBTYPE);
+		CultureSubtype cultureSubtype = new CultureSubtype(NEW_SUBTYPE1);
 		CultureType cultureType = new CultureType(DB_TYPE);
 		
 		cultureSubtype.setCultureType(cultureType);
-		CultureSubtype created = cultureSubtypeService.update(cultureSubtype, SUBTYPE_ID);
+		CultureSubtype created = cultureSubtypeService.update(cultureSubtype, SUBTYPE1_ID);
 		
-		verify(cultureSubtypeRepository, times(1)).findById(SUBTYPE_ID);
-		verify(cultureSubtypeRepository, times(1)).findByNameAndIdNot(NEW_SUBTYPE, SUBTYPE_ID);
+		verify(cultureSubtypeRepository, times(1)).findById(SUBTYPE1_ID);
+		verify(cultureSubtypeRepository, times(1)).findByNameAndIdNot(NEW_SUBTYPE1, SUBTYPE1_ID);
 		
-		assertEquals(NEW_SUBTYPE, created.getName());
+		assertEquals(NEW_SUBTYPE1, created.getName());
 		
 	}
 	
 	@Test
 	public void testDelete() throws Exception {
-	
-		cultureSubtypeService.delete(SUBTYPE_ID);
+		CultureSubtype cultureSubtype = new CultureSubtype(DB_SUBTYPE);
+		CultureType cultureType = new CultureType(DB_TYPE_ID);
+		cultureSubtype.setCultureType(cultureType);
 		
-		CultureSubtype savedCultureSubtype = new CultureSubtype(NEW_SUBTYPE);
-		savedCultureSubtype.setId(SUBTYPE_ID);
+		cultureSubtypeService.delete(DB_SUBTYPE_ID);
 		
-		//CultureType cultureType = new CultureType(DB_TYPE_ID);
-		//cultureSubtype.setCultureType(cultureType);
-		
-		verify(cultureSubtypeRepository, times(1)).findById(SUBTYPE_ID);
+		verify(cultureSubtypeRepository, times(1)).findById(DB_SUBTYPE_ID);
 	}
 	/*
 	@Test

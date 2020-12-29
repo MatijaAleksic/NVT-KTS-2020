@@ -8,10 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -36,13 +32,6 @@ public class CulturalOfferServiceUnitTest {
 	public void setUp() {
 		List<CulturalOffer> culturalOffers = new ArrayList<>();
 		culturalOffers.add(new CulturalOffer(NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT));
-		
-		Pageable pageable = PageRequest.of(PAGEABLE_PAGE, PAGEABLE_SIZE);
-		Page<CulturalOffer> culturalOfferPage = new PageImpl<>(culturalOffers, pageable,PAGEABLE_TOTAL_ELEMENTS);
-		
-		
-		
-		
 		
 		
 	}

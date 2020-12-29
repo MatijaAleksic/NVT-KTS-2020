@@ -22,10 +22,5 @@ public class CulturalOfferConstants {
 	public static final float NEW_CO_LON = 42.5f;
 	public static final float NEW_CO_LAT = 22.5f;
 	
-	
-	public static final Integer PAGEABLE_PAGE = 0;
-    public static final Integer PAGEABLE_SIZE = 2;
-    public static final Integer PAGEABLE_TOTAL_ELEMENTS = 1;
-	
 
 }

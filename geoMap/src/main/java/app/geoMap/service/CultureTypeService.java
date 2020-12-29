@@ -34,8 +34,7 @@ public class CultureTypeService implements ServiceInterface<CultureType>{
 	@Override
 	public CultureType create(CultureType entity) throws Exception {
 		if(cultureTypeRepository.findByName(entity.getName()) != null) {
-			return null;
-			//throw new Exception("Culture type with given name already exists!");
+			throw new Exception("Culture type with given name already exists!");
 		}
 		return cultureTypeRepository.save(entity);
 	}
