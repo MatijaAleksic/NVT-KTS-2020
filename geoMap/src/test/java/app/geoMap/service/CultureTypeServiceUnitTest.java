@@ -52,7 +52,7 @@ public class CultureTypeServiceUnitTest {
 		savedCultureType.setId(TYPE_ID);
 		
 		given(cultureTypeRepository.findById(TYPE_ID)).willReturn(java.util.Optional.of(savedCultureType));
-		given(cultureTypeRepository.findByName(NEW_TYPE)).willReturn(null);
+		given(cultureTypeRepository.findByName(NEW_TYPE)).willReturn(cultureType);
 		
 		CultureType cultureTypeFound = new CultureType(DB_TYPE_ID,DB_TYPE);
 		given(cultureTypeRepository.findByName(DB_TYPE)).willReturn(cultureTypeFound);
@@ -78,7 +78,7 @@ public class CultureTypeServiceUnitTest {
 		Pageable pageable = PageRequest.of(PAGEABLE_PAGE,PAGEABLE_SIZE);
 		Page<CultureType> found = cultureTypeService.findAll(pageable);
 		
-		verify(cultureTypeRepository, times(1)).findAll();
+		verify(cultureTypeRepository, times(1)).findAll(pageable);
 		assertEquals(FIND_ALL_NUMBER_OF_ITEMS, found.getNumberOfElements());
 		
 	}
