@@ -31,6 +31,15 @@ public class CultureType {
 		
 	}
 	
+	public CultureType(Long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+	
+	public CultureType(Long id) {
+		this.id = id;
+	}
+	
 	public CultureType(String name) {
 		this.name = name;
 	}

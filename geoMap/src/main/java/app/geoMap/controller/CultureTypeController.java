@@ -39,6 +39,15 @@ public class CultureTypeController {
 	*/
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@RequestMapping(method = RequestMethod.GET)
+	public ResponseEntity<List<CultureTypeDTO>> getAllCultureTypes(){
+		List<CultureType> cultureTypes =  cultureTypeService.findAll();
+		
+		return new ResponseEntity<>(toCultureTypeDTOList(cultureTypes), HttpStatus.OK);
+	}
+	
+	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value= "/by-page",method = RequestMethod.GET)
 	public ResponseEntity<Page<CultureTypeDTO>> getAllCultureTypes(Pageable pageable){
 		Page<CultureType> page = cultureTypeService.findAll(pageable);
