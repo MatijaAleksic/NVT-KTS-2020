@@ -72,12 +72,36 @@ public class CultureType {
 	public void setCultureSubtypes(Set<CultureSubtype> cultureSubtypes) {
 		this.cultureSubtypes = cultureSubtypes;
 	}
-
+	
 	@Override
 	public String toString() {
-		return "CultureType [id=" + id + ", name=" + name + ", cultureSubtypes=" + cultureSubtypes + "]";
+		return "CultureType [id=" + id + ", name=" + name + /*", cultureSubtypes=" + cultureSubtypes +*/ "]";
 	}
-	
+	/*
+	@Override
+	public String toString() {
+		return "CultureType [ name=" + name +  "]";
+	}*/
+	/*
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CultureType type = (CultureType) o;
+        if(type.getId() == null || id == null) {
+        	if(type.getName().equals(getName())) {
+        		return true;
+        		
+        	}
+        	return false;
+        }
+        return Object.equals(id, type.getId());
+	}
+	*/
 	
 	
 }

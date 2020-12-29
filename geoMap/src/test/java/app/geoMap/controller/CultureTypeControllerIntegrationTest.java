@@ -41,22 +41,22 @@ public class CultureTypeControllerIntegrationTest {
 	private CultureTypeService cultureTypeService;
 	
 	private String accessToken;
-	
+	/*
 	@Before
 	public void login(String username, String password) {
-		ResponseEntity<UserTokenStateDTO> responseEntity = restTemplate.postForEntity("auth/log-in", new UserLoginDTO(username,password), UserTokenStateDTO.class);
+		ResponseEntity<UserTokenStateDTO> responseEntity = restTemplate.postForEntity("/auth/log-in", new UserLoginDTO(username,password), UserTokenStateDTO.class);
 		accessToken = "Bearer " + responseEntity.getBody().getAccessToken();
 	}
-	
+	*/
 	
 	@Test
 	public void testGetAllCultureTypes() {
-		
+		/*
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
-		
-		ResponseEntity<CultureTypeDTO[]> responseEntity = restTemplate.getForEntity("api/cultural-type", CultureTypeDTO[].class );
+		*/
+		ResponseEntity<CultureTypeDTO[]> responseEntity = restTemplate.getForEntity("/api/cultural-type", CultureTypeDTO[].class );
 		
 		CultureTypeDTO[] cultureTypes = responseEntity.getBody();
 		
@@ -68,13 +68,13 @@ public class CultureTypeControllerIntegrationTest {
 	
 	@Test
 	public void testGetAllCultureTypesPageable() {
-		
+		/*
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
-		
-		ResponseEntity<CultureTypeDTO[]> responseEntity = restTemplate.getForEntity("api/cultural-type/by-page?page=0&size=2",  CultureTypeDTO[].class );
+		*/
+		ResponseEntity<CultureTypeDTO[]> responseEntity = restTemplate.getForEntity("/api/cultural-type/by-page?page=0&size=2",  CultureTypeDTO[].class );
 		
 		CultureTypeDTO[] cultureTypes = responseEntity.getBody();
 		
@@ -85,17 +85,17 @@ public class CultureTypeControllerIntegrationTest {
 	
 	@Test
 	public void testGetCultureType() {
-		
+		/*
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
-		
-		ResponseEntity<CultureTypeDTO> responseEntity = restTemplate.getForEntity("api/cultural-type/"+ TYPE_ID, CultureTypeDTO.class );
+		*/
+		ResponseEntity<CultureTypeDTO> responseEntity = restTemplate.getForEntity("/api/cultural-type/"+ TYPE_ID, CultureTypeDTO.class );
 		
 		CultureTypeDTO cultureType = responseEntity.getBody();
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		assertNull(cultureType);
+		//assertNull(cultureType);
 		assertEquals(DB_TYPE, cultureType.getName());
 		
 	}
@@ -105,15 +105,16 @@ public class CultureTypeControllerIntegrationTest {
     @Rollback(true)
 	public void testCreateCultureType() throws Exception {
 		int size = cultureTypeService.findAll().size();
+		/*
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
-		
-		ResponseEntity<CultureTypeDTO> responseEntity = restTemplate.postForEntity("api/cultural-type", new CultureTypeDTO(null, NEW_TYPE), CultureTypeDTO.class );
+		*/
+		ResponseEntity<CultureTypeDTO> responseEntity = restTemplate.postForEntity("/api/cultural-type", new CultureTypeDTO(null, NEW_TYPE), CultureTypeDTO.class );
 		
 		CultureTypeDTO cultureType = responseEntity.getBody();
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-		assertNull(cultureType);
+		//assertNull(cultureType);
 		assertEquals(NEW_TYPE, cultureType.getName());
 		
 		List<CultureType> cultureTypes = cultureTypeService.findAll();
@@ -129,19 +130,19 @@ public class CultureTypeControllerIntegrationTest {
     @Transactional
     @Rollback(true)
 	public void testUpdateCultureType() throws Exception {
-		
+		/*
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
-		
-		ResponseEntity<CultureTypeDTO> responseEntity = restTemplate.exchange("api/cultural-type/"+ TYPE_ID, HttpMethod.PUT, 
+		*/
+		ResponseEntity<CultureTypeDTO> responseEntity = restTemplate.exchange("/api/cultural-type/"+ TYPE_ID, HttpMethod.PUT, 
 				new HttpEntity<CultureTypeDTO>(new CultureTypeDTO(DB_TYPE_ID, NEW_TYPE)), CultureTypeDTO.class );
 		
 		CultureTypeDTO cultureType = responseEntity.getBody();
 		//provera odgovora servera
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		assertNull(cultureType);
+		//assertNull(cultureType);
 		assertEquals(DB_TYPE_ID, cultureType.getId());
 		assertEquals(NEW_TYPE, cultureType.getName());
 		//provera da li je zimenjen slog u bazi
@@ -166,7 +167,7 @@ public class CultureTypeControllerIntegrationTest {
 		int size =  cultureTypeService.findAll().size();
 		
 		//poziv REST servisa za brisanje
-		ResponseEntity<Void> responseEntity = restTemplate.exchange("api/cultural-type/" + cultureType.getId(),
+		ResponseEntity<Void> responseEntity = restTemplate.exchange("/api/cultural-type/" + cultureType.getId(),
 				HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
 		
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
