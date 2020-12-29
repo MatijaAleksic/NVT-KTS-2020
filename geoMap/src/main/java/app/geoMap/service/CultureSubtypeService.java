@@ -112,4 +112,5 @@ public class CultureSubtypeService implements ServiceInterface<CultureSubtype>{
         }
         cultureSubtypeRepository.delete(existingUser);
 	}
+	
 }

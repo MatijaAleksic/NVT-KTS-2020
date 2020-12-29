@@ -1,5 +1,7 @@
 package app.geoMap.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +13,9 @@ public interface CultureTypeRepository extends JpaRepository<CultureType, Long>{
 	CultureType findByName(String name);
 	
 	CultureType findByNameAndIdNot(String name, Long id);
+	
+	List<CultureType> findByTypeId(Long typeId);
+	
+	CultureType findByTypeIdAndId(Long typeId, Long id);
 
 }

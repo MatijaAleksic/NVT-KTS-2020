@@ -21,7 +21,7 @@ public class CultureType {
 	@Column(name = "culture_type_id")
 	private Long id;
 	
-	@Column(name = "name" , nullable = false , unique = true)
+	@Column(name = "name" , nullable = true , unique = true)
 	private String name;
 	
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
@@ -29,6 +29,15 @@ public class CultureType {
 
 	public CultureType() {
 		
+	}
+	
+	public CultureType(Long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+	
+	public CultureType(Long id) {
+		this.id = id;
 	}
 	
 	public CultureType(String name) {

@@ -28,14 +28,14 @@ public class CulturalOffer {
 	@Column(name = "cultural_offer_id")
 	private Long id;
 	
-	@Column(name = "name" , unique = false , nullable = false)
+	@Column(name = "name" , unique = false , nullable = true)
 	private String name;
 	
-	@Column(name = "creation_date",unique = false , nullable = false)
+	@Column(name = "creation_date",unique = false , nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationDate;
 	
-	@Column(name = "description",nullable = false , unique = false)
+	@Column(name = "description",nullable = true , unique = false)
 	private String description;
 	
 	@Column(name = "email" , nullable = true , unique = false)
@@ -44,10 +44,10 @@ public class CulturalOffer {
 	@Column(name = "phone" , nullable = true , unique = false )
 	private String phone;
 	
-	@Column(name = "longitude" ,nullable = false , unique = false)
+	@Column(name = "longitude" ,nullable = true , unique = false)
 	private float longitude;
 	
-	@Column(name = "latitude" , nullable = false , unique = false)
+	@Column(name = "latitude" , nullable = true , unique = false)
 	private float latitude;
 	
 	@PrimaryKeyJoinColumn
@@ -57,7 +57,7 @@ public class CulturalOffer {
 	@OneToMany(mappedBy = "culturalOffer", fetch = FetchType.LAZY , cascade = CascadeType.ALL)
 	private Set<Rating> ratings;
 	
-	@PrimaryKeyJoinColumn
+	//@PrimaryKeyJoinColumn
 	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
 	private Set<Comment> comments;
 	
@@ -72,7 +72,7 @@ public class CulturalOffer {
 	@ManyToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
 	private CultureSubtype cultureSubtype;
 	
-	@PrimaryKeyJoinColumn
+	//@PrimaryKeyJoinColumn
 	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
 	private Set<Image> images;
 

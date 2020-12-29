@@ -33,27 +33,32 @@ public class CommentService implements ServiceInterface<Comment>{
 	@Override
 	public Comment create(Comment entity) throws Exception {
 		if(commentRepository.findByText(entity.getText()) != null){
-            throw new Exception("User with username already exists");
+            throw new Exception("Comment with username already exists");
         }
-        return commentRepository.save(entity);
+		Comment c = new Comment();
+		c.setText(entity.getText());
+		c.setUser(entity.getUser());
+		c = this.commentRepository.save(c);
+        return c;
 	}
 
 	@Override
 	public Comment update(Comment entity, Long id) throws Exception {
-		Comment existingUser =  commentRepository.findById(id).orElse(null);
-        if(existingUser == null){
-            throw new Exception("User with given id doesn't exist");
+		Comment existingComment =  commentRepository.findById(id).orElse(null);
+        if(existingComment == null){
+            throw new Exception("Comment with given id doesn't exist");
         }
-        existingUser.setText(entity.getText());
-        return commentRepository.save(existingUser);
+        existingComment.setText(entity.getText());
+        existingComment.setUser(entity.getUser());
+        return commentRepository.save(existingComment);
 	}
 
 	@Override
 	public void delete(Long id) throws Exception {
-		Comment existingUser = commentRepository.findById(id).orElse(null);
-        if(existingUser == null){
-            throw new Exception("User with given id doesn't exist");
+		Comment existingComment = commentRepository.findById(id).orElse(null);
+        if(existingComment == null){
+            throw new Exception("Comment with given id doesn't exist");
         }
-        commentRepository.delete(existingUser);
+        commentRepository.delete(existingComment);
 	}
 }

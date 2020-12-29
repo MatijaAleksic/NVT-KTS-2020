@@ -26,13 +26,13 @@ public class News {
 	@Column(name = "news_id")
 	private Long id;
 	
-	@Column(name="title" , nullable = false, unique = false)
+	@Column(name="title" , nullable = true, unique = false)
 	private String title;
 	
-	@Column(name = "text" , nullable = false , unique = false)
+	@Column(name = "text" , nullable = true , unique = false)
 	private String text;
 	
-	@Column(name="cretion_date" , nullable = false , unique = false)
+	@Column(name="cretion_date" , nullable = true , unique = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationDate;
 	

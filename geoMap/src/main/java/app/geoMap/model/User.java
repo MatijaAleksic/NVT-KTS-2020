@@ -7,9 +7,22 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 
 @Entity
 @Table(name = "user_table")
@@ -22,7 +35,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails{
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(generator = "user_sequence", strategy = GenerationType.SEQUENCE)
+	@SequenceGenerator(name = "user_sequence", sequenceName = "USER_SEQUENCE")
 	@Column(name = "id")
 	private Long id;
 	
@@ -49,7 +64,7 @@ public class User implements UserDetails{
 	@Column(name = "last_password_reset_date")
     private Timestamp lastPasswordResetDate;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)//EAGER BILO
     @JoinTable(name = "user_authority",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
@@ -60,6 +75,11 @@ public class User implements UserDetails{
 		
 	}
 	
+	public User(String userName, String email) {
+		super();
+		this.userName = userName;
+		this.email = email;
+	}
 	public User(String firstName, String lastName, String userName, String password, String email) {
 		super();
 		this.firstName = firstName;
