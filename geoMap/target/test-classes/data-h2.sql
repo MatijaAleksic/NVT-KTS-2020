@@ -8,3 +8,4 @@ INSERT INTO rating(rating_id, value, cultural_offer_cultural_offer_id) values ((
 INSERT INTO image(image_id, name) values ((SELECT id FROM user_table WHERE email = 'markoMarkovic@maildrop.cc'), 'image123');
 
 INSERT INTO comment(comment_id, text) values ((SELECT id FROM user_table WHERE email = 'markoMarkovic@maildrop.cc'), 'text123');
+

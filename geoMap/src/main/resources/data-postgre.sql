@@ -4,8 +4,8 @@ INSERT INTO user_table (id, user_type, email,pasword) VALUES (4,'USER', 'user@gm
 INSERT INTO authority(name) VALUES ('ROLE_ADMIN');
 INSERT INTO authority(name) VALUES ('ROLE_USER');
 
-INSERT INTO user_authority (user_id, authority_id) values (1,1);
-INSERT INTO user_authority (user_id, authority_id) values (2,2);
+INSERT INTO user_authority (user_id, authority_id) values (3,1);
+INSERT INTO user_authority (user_id, authority_id) values (4,2);
 
 
 
