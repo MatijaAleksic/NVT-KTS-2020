@@ -1,11 +1,14 @@
 package app.geoMap.service;
 
 
+import app.geoMap.model.Authority;
 import app.geoMap.model.User;
 import app.geoMap.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.BDDMockito.BDDMyOngoingStubbing;
+import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,57 +27,62 @@ import static org.mockito.BDDMockito.given;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import static app.geoMap.constants.UserConstants.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource("classpath:test.properties")
 public class UserServiceUnitTest {
 	
 	@Autowired
     private UserService userService;
+	
+	@Autowired
+    private AuthorityService authService;
 
     @MockBean
     private UserRepository userRepository;
 
 
     @Before
-    public void setup() {
+    public void setup() throws Exception {
         List<User> users =  new ArrayList<>();
-        users.add(new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));
+        User newUser = new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL);
+        User dbUser = new User(DB_NAME, DB_LAST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DB_USER_EMAIL);
+        users.add(newUser);
+        users.add(dbUser);
+        
+        
+        User newUserEncPas = new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_ENCODED_PASSWORD, NEW_USER_EMAIL);
+        List<Authority> auth = authService.findByName("USER");
+        newUserEncPas.setAuthorities(auth);
 
         Pageable pageable = PageRequest.of(PAGEABLE_PAGE,PAGEABLE_SIZE);
         Page<User> userPage = new PageImpl<>(users,pageable,PAGEABLE_TOTAL_ELEMENTS);
 
-        // Definisanje ponasanja test dvojnika userRepository za findAll metodu
         given(userRepository.findAll()).willReturn(users);
-
         given(userRepository.findAll(pageable)).willReturn(userPage);
-
-        User user = new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL);
-        User savedUser = new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL);
-        savedUser.setId(NEW_ID);
-
-        given(userRepository.findById(DB_USER_ID)).willReturn(java.util.Optional.of(savedUser));
-
-        given(userRepository.findByUserName(NEW_USER_NAME)).willReturn(null);
-
-        User userFound = new User(DB_USER_NAME, DB_USER_EMAIL);
-        given(userRepository.findByEmail(DB_USER_EMAIL)).willReturn(userFound);
+        
+        given(userRepository.findById(DB_USER_ID)).willReturn(java.util.Optional.of(dbUser));
+        //given(userRepository.findByUserName(NEW_USER_NAME)).willReturn(null);
+        
+        given(userRepository.findByEmail(NEW_USER_EMAIL)).willReturn(null);
+        given(userRepository.save(org.mockito.ArgumentMatchers.any())).willReturn(newUserEncPas);
 
         given(userRepository.findByUserName(NEW_USER_NAME)).willReturn(null);
-        given(userRepository.save(user)).willReturn(savedUser);
 
-        doNothing().when(userRepository).delete(savedUser);
+        doNothing().when(userRepository).delete(newUser);
     }
     
     @Test
-    @Sql("classpath:/data-h2.sql")
     public void testFindAllPageable() {
         Pageable pageable = PageRequest.of(PAGEABLE_PAGE,PAGEABLE_SIZE);
         Page<User> found = userService.findAll(pageable);
 
-        //verify(userRepository, times(1)).findAll(pageable);
+        verify(userRepository, times(1)).findAll(pageable);
         assertEquals(FIND_ALL_NUMBER_OF_ITEMS, found.getNumberOfElements());
     }
 
@@ -98,24 +106,24 @@ public class UserServiceUnitTest {
     public void testCreate() throws Exception {
         User user = new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL);
         User created = userService.create(user);
-
+        
         verify(userRepository, times(1)).findByEmail(NEW_USER_EMAIL);
         verify(userRepository, times(1)).save(user);
 
         assertEquals(NEW_USER_NAME, created.getUsername());
     }
 
-    @Test
+    @Test(expected = java.lang.Exception.class)
     public void testCreate_GivenNameAlreadyExists() throws Exception {
-        User user = new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL);
+        User user = new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, DB_USER_EMAIL);
         User created = userService.create(user);
 
         verify(userRepository, times(1)).findByEmail(DB_USER_EMAIL);
-
         assertEquals(null, created);
     }
 
     @Test
+    @Transactional
     public void testUpdate() throws Exception {
         User user = new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL);
         User created = userService.update(user,DB_USER_ID);
@@ -126,7 +134,7 @@ public class UserServiceUnitTest {
     }
 
     @Test
-    @Rollback(true)
+    @Transactional
     public void testDelete() throws Exception {
         userService.delete(DB_USER_ID);
 

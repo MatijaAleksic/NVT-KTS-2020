@@ -45,10 +45,10 @@ public class CulturalOffer {
 	private String phone;
 	
 	@Column(name = "longitude" ,nullable = true , unique = false)
-	private float longitude;
+	private Float longitude;
 	
 	@Column(name = "latitude" , nullable = true , unique = false)
-	private float latitude;
+	private Float latitude;
 	
 	@PrimaryKeyJoinColumn
 	@ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)

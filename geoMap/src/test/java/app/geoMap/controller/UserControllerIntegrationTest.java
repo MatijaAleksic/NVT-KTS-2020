@@ -6,6 +6,7 @@ import app.geoMap.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
@@ -26,18 +27,23 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource("classpath:test.properties")
+//@EnableAutoConfiguration(exclude = {
+//		app.geoMap.config.WebConfiguration.class,
+//		app.geoMap.config.WebSecurityConfiguration.class,
+//})
 public class UserControllerIntegrationTest {
+	
 	@Autowired
     private TestRestTemplate restTemplate;
 
     @Autowired
     private UserService userService;
 
-    @Sql("classpath:/data-h2.sql")
     @Test
     public void testGetAllUsersPageable() {
         ResponseEntity<UserDTO[]> responseEntity =
-                restTemplate.getForEntity("/api/users/by-page?page=0&size=2",
+                restTemplate.getForEntity("/api/users/by-page",
                         UserDTO[].class);
 
         UserDTO[] users = responseEntity.getBody();
@@ -86,7 +92,6 @@ public class UserControllerIntegrationTest {
 
     @Test
     @Transactional
-    @Rollback(true)
     public void testCreateUser() throws Exception {
         int size = userService.findAll().size(); // broj slogova pre ubacivanja novog
 
@@ -112,7 +117,6 @@ public class UserControllerIntegrationTest {
 
     @Test
     @Transactional
-    @Rollback(true)
     public void testUpdateUser() throws Exception {
         ResponseEntity<UserDTO> responseEntity =
                 restTemplate.exchange("/api/cultural-content-category/1", HttpMethod.PUT,
@@ -143,7 +147,6 @@ public class UserControllerIntegrationTest {
 
     @Test
     @Transactional
-    @Rollback(true)
     public void testDeleteUser() throws Exception {
         // ubacimo kategoriju koju cemo brisati
         User user = userService.create(new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));

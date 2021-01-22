@@ -28,7 +28,6 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
-@Sql("classpath:/data-h2.sql")
 public class ImageControllerIntegrationTest {
 	
 	@Autowired

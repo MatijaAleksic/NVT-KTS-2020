@@ -8,6 +8,9 @@ import app.geoMap.model.User;
 import app.geoMap.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +33,21 @@ public class UserController {
 
     private UserMapper userMapper;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<User> users = userService.findAll();
 
         return new ResponseEntity<>(toUserDTOList(users), HttpStatus.OK);
+    }
+    
+    @RequestMapping(value= "/by-page",method = RequestMethod.GET)
+    public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
+        Page<User> page = userService.findAll(pageable);
+        List<UserDTO> userDTOS = toUserDTOList(page.toList());
+        //Page<UserDTO> pageUserDTOS = new PageImpl<>(userDTOS,page.getPageable(),page.getTotalElements());
+
+        return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

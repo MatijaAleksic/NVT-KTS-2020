@@ -46,7 +46,20 @@ public class UserService implements ServiceInterface<User>{
 		if(userRepository.findByEmail(entity.getEmail()) != null){
             throw new Exception("User with username already exists");
         }
-        return this.userRepository.save(entity);
+		User u = new User();
+		u.setId(entity.getId());
+        u.setUserName(entity.getUsername());
+        u.setPassword(passwordEncoder.encode(entity.getPassword()));
+        u.setFirstName(entity.getFirstName());
+        u.setLastName(entity.getLastName());
+        u.setEmail(entity.getEmail());
+
+        List<Authority> auth = authService.findByName("USER");
+        // u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
+        u.setAuthorities(auth);
+        u = this.userRepository.save(u);
+        return u;
+
 	}
 
 	@Override

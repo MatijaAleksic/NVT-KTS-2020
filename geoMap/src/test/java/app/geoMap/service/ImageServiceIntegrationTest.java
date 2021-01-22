@@ -9,10 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import static app.geoMap.constants.ImageConstants.*;
 import static org.junit.Assert.assertEquals;
@@ -20,11 +23,11 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource("classpath:test.properties")
 public class ImageServiceIntegrationTest {
 	@Autowired
     private  ImageService imageService;
 
-	@Sql("classpath:/data-h2.sql")
     @Test
     public void testFindAllPageable() {
         Pageable pageable = PageRequest.of(PAGEABLE_PAGE,PAGEABLE_SIZE);
@@ -45,7 +48,7 @@ public class ImageServiceIntegrationTest {
     }
 
     @Test
-    @Order(1)
+    @Transactional
     public void testCreate() throws Exception {
     	Image image = new Image(NEW_IMAGE_NAME);
     	image.setId(NEW_IMAGE_ID);
@@ -55,20 +58,20 @@ public class ImageServiceIntegrationTest {
     }
 
     @Test
-    @Order(2)
+    @Transactional
     public void testUpdate() throws Exception {
         Image image = new Image(NEW_IMAGE_NAME);
         Image created = imageService.update(image,NEW_IMAGE_IDD);
 
         assertEquals(NEW_IMAGE_NAME, created.getName());
     }
-    //NE RADI NE ZNAM ZASTO
-//    @Test
-//    @Order(3)
-//    public void testDelete() throws Exception {
-//    	imageService.delete(NEW_IMAGE_ID);
-//
-//        Image savedUser = new Image(NEW_IMAGE_NAME);
-//        savedUser.setId(NEW_IMAGE_ID);
-//    }
+    
+    @Test
+    @Transactional
+    public void testDelete() throws Exception {
+    	imageService.delete(NEW_IMAGE_IDD);
+
+        Image savedUser = new Image(NEW_IMAGE_NAME);
+        savedUser.setId(NEW_IMAGE_ID);
+    }
 }

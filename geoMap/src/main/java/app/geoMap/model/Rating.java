@@ -28,7 +28,6 @@ public class Rating {
 	@Column(name = "value" , nullable = true ,unique = false)
 	private float value;
 	
-	@PrimaryKeyJoinColumn
 	@OneToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
 	private User user;
 	

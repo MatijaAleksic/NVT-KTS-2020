@@ -11,10 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import static app.geoMap.constants.RatingConstants.*;
 import static app.geoMap.constants.UserConstants.NEW_LAST_NAME;
@@ -27,12 +30,12 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource("classpath:test.properties")
 public class RatingServiceIntegrationTest {
 	
 	@Autowired
     private  RatingService ratingService;
 
-	@Sql("classpath:/data-h2.sql")
 	@Test
 	public void testFindAllPageable() {
 		Pageable pageable = PageRequest.of(PAGEABLE_PAGE,PAGEABLE_SIZE);
@@ -53,7 +56,6 @@ public class RatingServiceIntegrationTest {
     }
 
     @Test
-    @Order(1)
     public void testCreate() throws Exception {
     	Rating rating = new Rating(DB_NEW_RATING_VALUE, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL)); 
         rating.setId(DB_NEW_RATING_ID);
@@ -63,7 +65,7 @@ public class RatingServiceIntegrationTest {
     }
 
     @Test
-    @Order(2)
+    @Transactional
     public void testUpdate() throws Exception {
         Rating user = new Rating(DB_NEW_RATING_VALUE, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));
         Rating created = ratingService.update(user,DB_NEW_RATING_IDD);
@@ -72,9 +74,9 @@ public class RatingServiceIntegrationTest {
     }
 
     @Test
-    @Order(3)
+    @Transactional
     public void testDelete() throws Exception {
-    	ratingService.delete(DB_NEW_RATING_ID);
+    	ratingService.delete(DB_NEW_RATING_IDD);
 
         Rating savedRating = new Rating(DB_NEW_RATING_VALUE, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));
         savedRating.setId(DB_NEW_RATING_ID);

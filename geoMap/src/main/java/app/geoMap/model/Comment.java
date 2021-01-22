@@ -26,7 +26,6 @@ public class Comment {
 	@Column(name = "text" , unique = false , nullable = true)
 	private String text;
 	
-	@PrimaryKeyJoinColumn
 	@OneToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
 	private User user;
 

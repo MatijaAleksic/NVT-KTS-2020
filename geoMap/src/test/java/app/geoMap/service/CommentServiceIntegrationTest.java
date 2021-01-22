@@ -11,10 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import static app.geoMap.constants.CommentConstants.*;
 import static app.geoMap.constants.UserConstants.NEW_LAST_NAME;
@@ -27,12 +30,12 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource("classpath:test.properties")
 public class CommentServiceIntegrationTest {
 	
 	@Autowired
     private  CommentService commentService;
 
-	@Sql("classpath:/data-h2.sql")
     @Test
     public void testFindAllPageable() {
         Pageable pageable = PageRequest.of(PAGEABLE_PAGE,PAGEABLE_SIZE);
@@ -53,7 +56,7 @@ public class CommentServiceIntegrationTest {
     }
 
     @Test
-    @Order(1)
+    @Transactional
     public void testCreate() throws Exception {
     	Comment comment = new Comment(DB_NEW_COMMENT_TEXT, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));  
     	comment.setId(DB_NEW_COMMENT_ID);
@@ -63,7 +66,7 @@ public class CommentServiceIntegrationTest {
     }
 
     @Test
-    @Order(2)
+    @Transactional
     public void testUpdate() throws Exception {
         Comment comment = new Comment(DB_NEW_COMMENT_TEXT, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL)); 
         Comment created = commentService.update(comment,DB_NEW_COMMENT_IDD);
@@ -72,9 +75,9 @@ public class CommentServiceIntegrationTest {
     }
 
     @Test
-    @Order(3)
+    @Transactional
     public void testDelete() throws Exception {
-    	commentService.delete(DB_NEW_COMMENT_ID);
+    	commentService.delete(DB_NEW_COMMENT_IDD);
 
         Comment savedComment = new Comment(DB_NEW_COMMENT_TEXT, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));
         savedComment.setId(DB_NEW_COMMENT_ID);

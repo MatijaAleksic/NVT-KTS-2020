@@ -38,32 +38,29 @@ public class ImageServiceUnitTest {
 
     @Before
     public void setup() {
-        List<Image> users =  new ArrayList<>();
-        users.add(new Image(NEW_IMAGE_NAME));
+        List<Image> images =  new ArrayList<>();
+        Image newImage = new Image(NEW_IMAGE_NAME);
+        Image dbImage = new Image(DB_IMAGE_NAME);
+        dbImage.setId(1L);
+        images.add(dbImage);
 
         Pageable pageable = PageRequest.of(PAGEABLE_PAGE,PAGEABLE_SIZE);
-        Page<Image> userPage = new PageImpl<>(users,pageable,PAGEABLE_TOTAL_ELEMENTS);
+        Page<Image> imagePage = new PageImpl<>(images,pageable,PAGEABLE_TOTAL_ELEMENTS);
 
         // Definisanje ponasanja test dvojnika imageRepository za findAll metodu
-        given(imageRepository.findAll()).willReturn(users);
+        given(imageRepository.findAll()).willReturn(images);
+        given(imageRepository.findAll(pageable)).willReturn(imagePage);
 
-        given(imageRepository.findAll(pageable)).willReturn(userPage);
+        given(imageRepository.findById(DB_IMAGE_ID)).willReturn(java.util.Optional.of(dbImage));
 
-        Image user = new Image(NEW_IMAGE_NAME);
-        Image savedUser = new Image(NEW_IMAGE_NAME);
-        savedUser.setId(NEW_IMAGE_ID);
+        given(imageRepository.findByName(NEW_IMAGE_NAME)).willReturn(null);
+        given(imageRepository.save(org.mockito.ArgumentMatchers.any())).willReturn(newImage);
 
-        given(imageRepository.findById(DB_IMAGE_ID)).willReturn(java.util.Optional.of(savedUser));
+        given(imageRepository.findByName(DB_IMAGE_NAME)).willReturn(dbImage);
 
         given(imageRepository.findByName(NEW_IMAGE_NAME)).willReturn(null);
 
-        Image userFound = new Image(DB_IMAGE_NAME);
-        given(imageRepository.findByName(DB_IMAGE_NAME)).willReturn(userFound);
-
-        given(imageRepository.findByName(NEW_IMAGE_NAME)).willReturn(null);
-        given(imageRepository.save(user)).willReturn(savedUser);
-
-        doNothing().when(imageRepository).delete(savedUser);
+        doNothing().when(imageRepository).delete(newImage);
     }
 
     @Test
@@ -93,19 +90,19 @@ public class ImageServiceUnitTest {
 
     @Test
     public void testCreate() throws Exception {
-        Image user = new Image(NEW_IMAGE_NAME);
-        Image created = imageService.create(user);
+        Image image = new Image(NEW_IMAGE_NAME);
+        Image created = imageService.create(image);
 
         verify(imageRepository, times(1)).findByName(NEW_IMAGE_NAME);
-        verify(imageRepository, times(1)).save(user);
+        verify(imageRepository, times(1)).save(image);
 
         assertEquals(NEW_IMAGE_NAME, created.getName());
     }
 
-    @Test
+    @Test(expected = java.lang.Exception.class)
     public void testCreate_GivenNameAlreadyExists() throws Exception {
-        Image user = new Image(NEW_IMAGE_NAME);
-        Image created = imageService.create(user);
+        Image image = new Image(DB_IMAGE_NAME);
+        Image created = imageService.create(image);
 
         verify(imageRepository, times(1)).findByName(DB_IMAGE_NAME);
 

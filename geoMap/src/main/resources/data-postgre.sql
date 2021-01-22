@@ -1,11 +1,16 @@
-INSERT INTO user_table (id, user_type, email,pasword) VALUES (3,'ADMNISTRATOR','admin@gmail.cc', '$2y$12$36Iz3dtM10D8MXjOmOjdUeCh3KG5h9hZ0wGFUIVe.tIuJ7JGmeQjq');
-INSERT INTO user_table (id, user_type, email,pasword) VALUES (4,'USER', 'user@gmail.cc', '$2y$12$MH4riFIZar/74dU4Z2jE/upVcKbcFjiX/UaY0PJMACB1MIOwp6vdy');
+INSERT INTO user_table (id, user_type, user_name, email,pasword) VALUES (1, 'ADMINISTRATOR', 'markomarkovic','markoMarkovic@maildrop.cc','MarkoMarkovic12');
+INSERT INTO user_table (id, user_type, user_name, email,pasword) VALUES (2, 'USER', 'peroperic', 'peroPerovic@maildrop.cc','PeroPerovic12');
 
-INSERT INTO authority(name) VALUES ('ROLE_ADMIN');
-INSERT INTO authority(name) VALUES ('ROLE_USER');
+INSERT INTO cultural_offer(name) values ('Institucija');
 
-INSERT INTO user_authority (user_id, authority_id) values (3,1);
-INSERT INTO user_authority (user_id, authority_id) values (4,2);
+INSERT INTO rating(rating_id, value, cultural_offer_cultural_offer_id, user_id) values (1, 1, (SELECT cultural_offer_id FROM cultural_offer WHERE cultural_offer_id = '1'),(SELECT id FROM user_table WHERE id = '1'));
 
+INSERT INTO image(image_id, name) values (1, 'image123');
 
+INSERT INTO comment(comment_id, text, user_id) values (1, 'text123', (SELECT id FROM user_table WHERE id = '1'));
 
+INSERT INTO authority (name) VALUES ('ADMIN');
+INSERT INTO authority (name) VALUES ('USER');
+
+insert into user_authority (user_id, authority_id) values (1, 1); -- admin has ROLE_ADMIN
+insert into user_authority (user_id, authority_id) values (2, 2); -- user has ROLE_GUEST

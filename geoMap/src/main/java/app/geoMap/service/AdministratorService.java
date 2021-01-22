@@ -50,7 +50,7 @@ public class AdministratorService implements ServiceInterface<Administrator>{
         u.setLastName(entity.getLastName());
         u.setEmail(entity.getEmail());
 
-        List<Authority> auth = authService.findByName("ROLE_USER");
+        List<Authority> auth = authService.findByName("ADMINISTRATOR");
         u.setAuthorities(auth);
 
         u = this.administratorRepository.save(u);

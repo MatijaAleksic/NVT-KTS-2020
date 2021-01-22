@@ -35,9 +35,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails{
 
 	@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@GeneratedValue(generator = "user_sequence", strategy = GenerationType.SEQUENCE)
-	@SequenceGenerator(name = "user_sequence", sequenceName = "USER_SEQUENCE")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@GeneratedValue(generator = "user_sequence", strategy = GenerationType.SEQUENCE)
+	//@SequenceGenerator(name = "user_sequence", sequenceName = "USER_SEQUENCE")
 	@Column(name = "id")
 	private Long id;
 	

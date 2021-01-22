@@ -37,6 +37,7 @@ public class ImageService implements ServiceInterface<Image>{
             throw new Exception("Image with given id already exists");
         }
         Image i = new Image();
+        i.setId(entity.getId());
         i.setName(entity.getName());
         i.setPicByte(entity.getPicByte());
         return imageRepository.save(entity);

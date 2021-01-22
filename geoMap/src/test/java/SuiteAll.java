@@ -14,18 +14,19 @@ import app.geoMap.service.UserServiceIntegrationTest;
 import app.geoMap.service.RatingServiceIntegrationTest;
 import app.geoMap.service.CommentServiceIntegrationTest;
 import app.geoMap.service.ImageServiceIntegrationTest;
+import app.geoMap.service.ImageServiceUnitTest;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 @RunWith(Suite.class)
-//@Sql("classpath:/data-h2.sql")
-@SuiteClasses({UserRepositoryIntegrationTest.class, UserRepositoryUnitTest.class, RatingRepositoryIntegrationTest.class, 
-	RatingRepositoryUnitTest.class, CommentRepositoryIntegrationTest.class, CommentRepositoryUnitTest.class, ImageRepositoryIntegrationTest.class,
-	ImageRepositoryUnitTest.class,UserServiceIntegrationTest.class,RatingServiceIntegrationTest.class,CommentServiceIntegrationTest.class,	ImageServiceIntegrationTest.class, })
-//@TestPropertySource("classpath:test.properties")
+@SuiteClasses({UserServiceIntegrationTest.class, RatingServiceIntegrationTest.class,ImageServiceIntegrationTest.class,
+	CommentServiceIntegrationTest.class, UserRepositoryIntegrationTest.class, RatingRepositoryIntegrationTest.class,
+	ImageRepositoryIntegrationTest.class,CommentRepositoryIntegrationTest.class, ImageServiceUnitTest.class })
+@TestPropertySource("classpath:test.properties")
 public class SuiteAll {
 	
 
