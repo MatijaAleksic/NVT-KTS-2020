@@ -2,6 +2,7 @@ package app.geoMap.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
@@ -56,7 +57,8 @@ public class CultureTypeControllerIntegrationTest {
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
 		*/
-		ResponseEntity<CultureTypeDTO[]> responseEntity = restTemplate.getForEntity("/api/cultural-type", CultureTypeDTO[].class );
+		ResponseEntity<CultureTypeDTO[]> responseEntity =
+				restTemplate.getForEntity("/api/cultural-type", CultureTypeDTO[].class );
 		
 		CultureTypeDTO[] cultureTypes = responseEntity.getBody();
 		
@@ -95,7 +97,7 @@ public class CultureTypeControllerIntegrationTest {
 		
 		CultureTypeDTO cultureType = responseEntity.getBody();
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		//assertNull(cultureType);
+		assertNotNull(cultureType);
 		assertEquals(DB_TYPE, cultureType.getName());
 		
 	}
@@ -114,7 +116,7 @@ public class CultureTypeControllerIntegrationTest {
 		
 		CultureTypeDTO cultureType = responseEntity.getBody();
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-		//assertNull(cultureType);
+		assertNotNull(cultureType);
 		assertEquals(NEW_TYPE, cultureType.getName());
 		
 		List<CultureType> cultureTypes = cultureTypeService.findAll();
@@ -142,7 +144,7 @@ public class CultureTypeControllerIntegrationTest {
 		CultureTypeDTO cultureType = responseEntity.getBody();
 		//provera odgovora servera
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		//assertNull(cultureType);
+		assertNotNull(cultureType);
 		assertEquals(DB_TYPE_ID, cultureType.getId());
 		assertEquals(NEW_TYPE, cultureType.getName());
 		//provera da li je zimenjen slog u bazi
@@ -151,7 +153,7 @@ public class CultureTypeControllerIntegrationTest {
 		assertEquals(NEW_TYPE, cultureType.getName());
 		
 		//vracanje podataka na staru vrednost
-		dbCultureType.setName(DB_TYPE);
+		dbCultureType.setName(NEW_TYPE);
 		cultureTypeService.update(dbCultureType, dbCultureType.getId());
 		
 		

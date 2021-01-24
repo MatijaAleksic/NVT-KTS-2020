@@ -72,7 +72,7 @@ public class NewsService implements ServiceInterface<News>{
         existingNews.setImages(entity.getImages());
         existingNews.setAdministrator(entity.getAdministrator());
         existingNews.setText(entity.getText());
-        existingNews.setTitle(entity.getText());
+        existingNews.setTitle(entity.getTitle());
 
         return newsRepository.save(existingNews);
     }
@@ -88,8 +88,8 @@ public class NewsService implements ServiceInterface<News>{
 
 	@Override
 	public News create(News entity) throws Exception {
-		if(newsRepository.findById(entity.getId()).orElse(null) != null){
-            throw new Exception("News with given id already exists");
+		if(newsRepository.findByTitle(entity.getTitle())!= null){
+            throw new Exception("News with given title already exists");
 		} 
         return newsRepository.save(entity);
 	}

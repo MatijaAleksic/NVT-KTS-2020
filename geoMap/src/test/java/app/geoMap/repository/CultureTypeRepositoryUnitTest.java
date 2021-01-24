@@ -1,15 +1,13 @@
 package app.geoMap.repository;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
-import java.util.List;
-
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -20,25 +18,26 @@ import static app.geoMap.constants.CultureTypeConstants.*;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @TestPropertySource("classpath:test.properties")
-public class CultureTypeRepositoryIntegraionTest {
+
+public class CultureTypeRepositoryUnitTest {
 	
 	@Autowired
-	private CultureTypeRepository cultureTypeRepository;	
+	private TestEntityManager entityManager;
+	
+	@Autowired
+	private CultureTypeRepository cultureTypeRepository;
+	
+	@Before
+	public void setUp() {
+		entityManager.persist(new CultureType(NEW_TYPE));
+		 
+	}
 	
 	@Test
 	public void testFindByName() {
-		CultureType found = cultureTypeRepository.findByName(DB_TYPE);	
-		assertEquals(DB_TYPE, found.getName());
+		CultureType found = cultureTypeRepository.findByName(NEW_TYPE);
+		assertEquals(NEW_TYPE, found.getName());
 	}
-	
-	@Test
-	public void testFindByNameAndIdNot() {
-		CultureType found = cultureTypeRepository.findByNameAndIdNot(DB_TYPE, DB_TYPE_ID);
-		assertNull(found);
-	}
-	
-	
-		
 	
 	
 

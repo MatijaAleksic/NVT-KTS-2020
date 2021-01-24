@@ -42,11 +42,19 @@ public class CulturalOfferService implements ServiceInterface<CulturalOffer>{
 
 	@Override
 	public CulturalOffer update(CulturalOffer entity, Long id) throws Exception {
-		if(culturalOfferRepository.findById(entity.getId()) != null){
+		/*if(culturalOfferRepository.findById(entity.getId()) != null){
             throw new Exception("Cultural Offer with given id already exists");
         }
 		
+        return culturalOfferRepository.save(entity);*/
+		CulturalOffer existingCulturalOffer= culturalOfferRepository.findById(id).orElse(null);
+        if(existingCulturalOffer == null){
+            throw new Exception("ultural Offer with given id doesn't exist");
+        }
+        existingCulturalOffer.setName(entity.getName());
+        
         return culturalOfferRepository.save(entity);
+        
 	}
 
 	@Override

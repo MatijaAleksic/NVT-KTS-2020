@@ -4,8 +4,8 @@ public class CultureSubtypeConstants {
 	
 	public static final String NEW_SUBTYPE = "Galerija";
     public static final String NEW_SUBTYPE2 = "Spomenik";
-    public static final Long SUBTYPE_ID = 1L;
-    public static final Long SUBTYPE2_ID = 1L;
+    public static final Long SUBTYPE_ID = 2L;
+    public static final Long SUBTYPE2_ID = 3L;
     public static final long SUBTYPE_SIZE = 2;
 
     public static final String DB_SUBTYPE = "Muzej";
