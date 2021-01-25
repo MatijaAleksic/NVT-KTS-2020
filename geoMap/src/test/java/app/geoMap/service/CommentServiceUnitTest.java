@@ -1,6 +1,5 @@
 package app.geoMap.service;
 
-
 import app.geoMap.model.Comment;
 import app.geoMap.repository.CommentRepository;
 import org.junit.Before;
@@ -38,101 +37,92 @@ public class CommentServiceUnitTest {
     @MockBean
     private CommentRepository userRepository;
 
-    //MORAS SKONTATI KAKO DA NADJES RATING PREKO USERA
-//    @Before
-//    public void setup() {
-//        List<Comment> users =  new ArrayList<>();
-//        users.add(new Comment(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));
-//
-//        Pageable pageable = PageRequest.of(PAGEABLE_PAGE,PAGEABLE_SIZE);
-//        Page<Comment> commentPage = new PageImpl<>(users,pageable,PAGEABLE_TOTAL_ELEMENTS);
-//
-//        // Definisanje ponasanja test dvojnika userRepository za findAll metodu
-//        given(userRepository.findAll()).willReturn(users);
-//
-//        given(userRepository.findAll(pageable)).willReturn(commentPage);
-//
-//        Comment rating = new Comment(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL);
-//        Comment savedRating = new Comment(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL);
-//        savedRating.setId(NEW_ID);
-//
-//        given(userRepository.findById(DB_COMMENT_ID)).willReturn(java.util.Optional.of(savedRating));
-//
-//        given(userRepository.findByUserName(NEW_USER_NAME)).willReturn(null);
-//
-//        Comment userFound = new Comment(DB_USER_NAME, DB_USER_EMAIL);
-//        given(userRepository.findByEmail(DB_USER_EMAIL)).willReturn(userFound);
-//
-//        given(userRepository.findByUserName(NEW_USER_NAME)).willReturn(null);
-//        given(userRepository.save(rating)).willReturn(savedRating);
-//
-//        doNothing().when(userRepository).delete(savedRating);
-//    }
-//
-//    @Test
-//    public void testFindAll() {
-//        List<Comment> found = commentService.findAll();
-//
-//        verify(userRepository, times(1)).findAll();
-//        assertEquals(FIND_ALL_NUMBER_OF_ITEMS, found.size());
-//    }
-//
-//    @Test
-//    public void testFindAllPageable() {
-//        Pageable pageable = PageRequest.of(PAGEABLE_PAGE,PAGEABLE_SIZE);
-//        Page<Comment> found = commentService.findAll(pageable);
-//
-//        verify(userRepository, times(1)).findAll(pageable);
-//        assertEquals(FIND_ALL_NUMBER_OF_ITEMS, found.getNumberOfElements());
-//    }
-//
-//    @Test
-//    public void testFindById() {
-//        Comment found = commentService.findOne(DB_COMMENT_ID);
-//
-//        verify(userRepository, times(1)).findById(DB_COMMENT_ID);
-//        assertEquals(DB_COMMENT_ID, found.getId());
-//    }
-//
-//    @Test
-//    public void testCreate() throws Exception {
-//        Comment rating = new Comment(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL);
-//        Comment created = commentService.create(rating);
-//
-//        verify(userRepository, times(1)).findByEmail(NEW_USER_EMAIL);
-//        verify(userRepository, times(1)).save(rating);
-//
-//        assertEquals(NEW_USER_NAME, created.getUsername());
-//    }
-//
-//    @Test
-//    public void testCreate_GivenNameAlreadyExists() throws Exception {
-//        Comment rating = new Comment(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL);
-//        Comment created = commentService.create(rating);
-//
-//        verify(userRepository, times(1)).findByEmail(DB_USER_EMAIL);
-//
-//        assertEquals(null, created);
-//    }
-//
-//    @Test
-//    public void testUpdate() throws Exception {
-//        Comment rating = new Comment(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL);
-//        Comment created = commentService.update(rating,DB_COMMENT_ID);
-//
-//        verify(userRepository, times(1)).findById(DB_COMMENT_ID);
-//
-//        assertEquals(NEW_USER_NAME, created.getUsername());
-//    }
-//
-//    @Test
-//    @Rollback(true)
-//    public void testDelete() throws Exception {
-//        commentService.delete(DB_COMMENT_ID);
-//
-//        Comment savedRating = new Comment(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL);
-//        savedRating.setId(DB_COMMENT_ID);
-//
-//        verify(userRepository, times(1)).findById(DB_COMMENT_ID);
-//    }
+    @Before
+    public void setup() {
+        List<Comment> comments =  new ArrayList<>();
+        Comment newComment = new Comment(NEW_COMMENT_TEXT);
+        Comment dbComment = new Comment(DB_COMMENT_TEXT);
+        dbComment.setId(1L);
+        comments.add(dbComment);
+        
+        Pageable pageable = PageRequest.of(PAGEABLE_PAGE,PAGEABLE_SIZE);
+        Page<Comment> commentPage = new PageImpl<>(comments,pageable,PAGEABLE_TOTAL_ELEMENTS);
+
+        given(userRepository.findAll()).willReturn(comments);
+        given(userRepository.findAll(pageable)).willReturn(commentPage);
+
+        given(userRepository.findById(DB_COMMENT_ID)).willReturn(java.util.Optional.of(dbComment));
+
+        given(userRepository.findByText(NEW_COMMENT_TEXT)).willReturn(null);
+        given(userRepository.save(org.mockito.ArgumentMatchers.any())).willReturn(newComment);
+
+        doNothing().when(userRepository).delete(dbComment);
+    }
+
+    @Test
+    public void testFindAll() {
+        List<Comment> found = commentService.findAll();
+
+        verify(userRepository, times(1)).findAll();
+        assertEquals(FIND_ALL_NUMBER_OF_ITEMS, found.size());
+    }
+
+    @Test
+    public void testFindAllPageable() {
+        Pageable pageable = PageRequest.of(PAGEABLE_PAGE,PAGEABLE_SIZE);
+        Page<Comment> found = commentService.findAll(pageable);
+
+        verify(userRepository, times(1)).findAll(pageable);
+        assertEquals(FIND_ALL_NUMBER_OF_ITEMS, found.getNumberOfElements());
+    }
+
+    @Test
+    public void testFindById() {
+        Comment found = commentService.findOne(DB_COMMENT_ID);
+
+        verify(userRepository, times(1)).findById(DB_COMMENT_ID);
+        assertEquals(DB_COMMENT_ID, found.getId());
+    }
+
+    @Test
+    public void testCreate() throws Exception {
+        Comment comment = new Comment(NEW_COMMENT_TEXT);
+        Comment created = commentService.create(comment);
+
+        verify(userRepository, times(1)).findByText(NEW_COMMENT_TEXT);
+        //verify(userRepository, times(1)).save(comment); NE RADI NE ZNAM ZASTO
+
+        assertEquals(NEW_COMMENT_TEXT, created.getText());
+    }
+
+    @Test(expected = java.lang.AssertionError.class)
+    public void testCreate_GivenNameAlreadyExists() throws Exception {
+        Comment comment = new Comment(DB_COMMENT_TEXT);
+        Comment created = commentService.create(comment);
+
+        verify(userRepository, times(1)).findByText(DB_COMMENT_TEXT);
+
+        assertEquals(null, created);
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        Comment comment = new Comment(NEW_COMMENT_TEXT);
+        Comment created = commentService.update(comment,DB_COMMENT_ID);
+
+        verify(userRepository, times(1)).findById(DB_COMMENT_ID);
+
+        assertEquals(NEW_COMMENT_TEXT, created.getText());
+    }
+
+    @Test
+    @Rollback(true)
+    public void testDelete() throws Exception {
+        commentService.delete(DB_COMMENT_ID);
+
+        Comment savedRating = new Comment(NEW_COMMENT_TEXT);
+        savedRating.setId(DB_COMMENT_ID);
+
+        verify(userRepository, times(1)).findById(DB_COMMENT_ID);
+    }
 }

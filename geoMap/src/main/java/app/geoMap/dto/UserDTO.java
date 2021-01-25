@@ -14,7 +14,7 @@ public class UserDTO {
 	private String lastName;
 	
 	@NotBlank(message = "User name cannot be empty.")
-	private String userName;
+	private String username;
 	
 	@NotBlank(message = "Password cannot be empty.")
 	private String password;
@@ -33,7 +33,7 @@ public class UserDTO {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.userName = userName;
+		this.username = userName;
 		this.password = password;
 		this.email = email;
 	}
@@ -63,11 +63,11 @@ public class UserDTO {
 	}
 
 	public String getUserName() {
-		return userName;
+		return username;
 	}
 
 	public void setUserName(String userName) {
-		this.userName = userName;
+		this.username = userName;
 	}
 
 	public String getPassword() {

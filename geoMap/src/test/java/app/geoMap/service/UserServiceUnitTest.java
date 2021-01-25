@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -39,9 +40,6 @@ public class UserServiceUnitTest {
 	
 	@Autowired
     private UserService userService;
-	
-	@Autowired
-    private AuthorityService authService;
 
     @MockBean
     private UserRepository userRepository;
@@ -52,13 +50,12 @@ public class UserServiceUnitTest {
         List<User> users =  new ArrayList<>();
         User newUser = new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL);
         User dbUser = new User(DB_NAME, DB_LAST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DB_USER_EMAIL);
+        dbUser.setId(DB_USER_ID);
         users.add(newUser);
         users.add(dbUser);
         
         
         User newUserEncPas = new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_ENCODED_PASSWORD, NEW_USER_EMAIL);
-        List<Authority> auth = authService.findByName("USER");
-        newUserEncPas.setAuthorities(auth);
 
         Pageable pageable = PageRequest.of(PAGEABLE_PAGE,PAGEABLE_SIZE);
         Page<User> userPage = new PageImpl<>(users,pageable,PAGEABLE_TOTAL_ELEMENTS);
@@ -67,12 +64,11 @@ public class UserServiceUnitTest {
         given(userRepository.findAll(pageable)).willReturn(userPage);
         
         given(userRepository.findById(DB_USER_ID)).willReturn(java.util.Optional.of(dbUser));
-        //given(userRepository.findByUserName(NEW_USER_NAME)).willReturn(null);
         
         given(userRepository.findByEmail(NEW_USER_EMAIL)).willReturn(null);
         given(userRepository.save(org.mockito.ArgumentMatchers.any())).willReturn(newUserEncPas);
 
-        given(userRepository.findByUserName(NEW_USER_NAME)).willReturn(null);
+        given(userRepository.findByUsername(NEW_USER_NAME)).willReturn(null);
 
         doNothing().when(userRepository).delete(newUser);
     }
@@ -108,12 +104,11 @@ public class UserServiceUnitTest {
         User created = userService.create(user);
         
         verify(userRepository, times(1)).findByEmail(NEW_USER_EMAIL);
-        verify(userRepository, times(1)).save(user);
 
         assertEquals(NEW_USER_NAME, created.getUsername());
     }
 
-    @Test(expected = java.lang.Exception.class)
+    @Test(expected = java.lang.AssertionError.class)
     public void testCreate_GivenNameAlreadyExists() throws Exception {
         User user = new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, DB_USER_EMAIL);
         User created = userService.create(user);

@@ -1,7 +1,6 @@
 package app.geoMap.repository;
 
-import static app.geoMap.constants.CommentConstants.DB_NEW_USER_ID;
-import static app.geoMap.constants.CommentConstants.DB_NEW_COMMENT_TEXT;
+import static app.geoMap.constants.CommentConstants.*;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
@@ -40,13 +39,13 @@ public class CommentRepositoryUnitTest {
     
     @Test
     public void testfindByUser_Id() {
-    	Comment found = commentRepository.findByUser_Id(DB_NEW_USER_ID);
-        assertEquals(DB_NEW_USER_ID, found.getUser().getId());
+    	Comment found = commentRepository.findByUser_Id(DB_USER_ID);
+        assertEquals(DB_USER_ID, found.getUser().getId());
     }
     
     @Test
     public void testfindByText() {
-    	Comment found = commentRepository.findByText(DB_NEW_COMMENT_TEXT);
-        assertEquals(DB_NEW_COMMENT_TEXT, found.getText());
+    	Comment found = commentRepository.findByText(NEW_COMMENT_TEXT);
+        assertEquals(NEW_COMMENT_TEXT, found.getText());
     }
 }

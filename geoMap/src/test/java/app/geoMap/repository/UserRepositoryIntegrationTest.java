@@ -30,7 +30,7 @@ public class UserRepositoryIntegrationTest {
     
     @Test
     public void testFindUserName() {
-        User found = userRepository.findByUserName(DB_USER_NAME);
+        User found = userRepository.findByUsername(DB_USER_NAME);
         assertEquals(DB_USER_NAME, found.getUserName());
     }
 }

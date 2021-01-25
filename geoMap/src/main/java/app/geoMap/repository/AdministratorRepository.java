@@ -8,5 +8,5 @@ import app.geoMap.model.Administrator;
 @Repository
 public interface AdministratorRepository extends JpaRepository<Administrator, Long> {
 	
-	Administrator findByUserName(String username);
+	Administrator findByUsername(String username);
 }

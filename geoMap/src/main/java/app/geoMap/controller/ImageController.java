@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.geoMap.dto.ImageDTO;
+import app.geoMap.dto.UserDTO;
 import app.geoMap.helper.ImageMapper;
 import app.geoMap.model.Image;
+import app.geoMap.model.User;
 import app.geoMap.service.ImageService;
 
 @RestController
@@ -29,7 +33,7 @@ public class ImageController {
 
     private ImageMapper ImageMapper;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<ImageDTO>> getAllImages() {
         List<Image> images = ImageService.findAll();
@@ -37,7 +41,7 @@ public class ImageController {
         return new ResponseEntity<>(toImagesDTOList(images), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<ImageDTO> getImage(@PathVariable Long id){
     	Image image = ImageService.findOne(id);
@@ -46,6 +50,16 @@ public class ImageController {
         }
 
         return new ResponseEntity<>(ImageMapper.toDto(image), HttpStatus.OK);
+    }
+    
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @RequestMapping(value= "/by-page",method = RequestMethod.GET)
+    public ResponseEntity<List<ImageDTO>> getAllImages(Pageable pageable) {
+        Page<Image> page = ImageService.findAll(pageable);
+        List<ImageDTO> imageDTOS = toImagesDTOList(page.toList());
+        //Page<UserDTO> pageUserDTOS = new PageImpl<>(userDTOS,page.getPageable(),page.getTotalElements());
+
+        return new ResponseEntity<>(imageDTOS, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

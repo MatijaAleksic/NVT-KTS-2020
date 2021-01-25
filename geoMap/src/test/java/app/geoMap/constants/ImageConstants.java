@@ -13,4 +13,7 @@ public class ImageConstants {
     public static final Integer PAGEABLE_PAGE = 0;
     public static final Integer PAGEABLE_SIZE = 1;
     public static final Integer PAGEABLE_TOTAL_ELEMENTS = 1;
+    
+    public static final String DB_USER_NAME = "markomarkovic";
+    public static final String DB_USER_PASSWORD = "MarkoMarkovic12";
 }

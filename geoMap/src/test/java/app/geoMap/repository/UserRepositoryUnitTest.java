@@ -37,7 +37,7 @@ public class UserRepositoryUnitTest {
     
     @Test
     public void testFindUserName() {
-        User found = userRepository.findByUserName(NEW_USER_NAME);
+        User found = userRepository.findByUsername(NEW_USER_NAME);
         assertEquals(NEW_USER_NAME, found.getUserName());
     }
 

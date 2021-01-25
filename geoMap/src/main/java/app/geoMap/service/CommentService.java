@@ -38,8 +38,7 @@ public class CommentService implements ServiceInterface<Comment>{
 		Comment c = new Comment();
 		c.setText(entity.getText());
 		c.setUser(entity.getUser());
-		c = this.commentRepository.save(c);
-        return c;
+		return commentRepository.save(c);
 	}
 
 	@Override

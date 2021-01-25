@@ -92,19 +92,19 @@ public class RatingControllerIntegrationTest {
 
         ResponseEntity<RatingDTO> responseEntity =
                 restTemplate.postForEntity("/api/users",
-                        new RatingDTO(null, DB_NEW_RATING_VALUE),
+                        new RatingDTO(null, NEW_RATING_VALUE),
                         RatingDTO.class);
 
         // provera odgovora servera
         RatingDTO rating = responseEntity.getBody();
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertNotNull(rating);
-        assertEquals(DB_NEW_USER_EMAIL ,rating.getUser().getEmail());
+        assertEquals(NEW_USER_EMAIL ,rating.getUser().getEmail());
 
         List<Rating> ratings = ratingService.findAll();
         assertEquals(size + 1, ratings.size()); // mora biti jedan vise slog sada nego pre
         // poslednja kategorija u listi treba da bude nova kategorija koja je ubacena u testu
-        assertEquals(DB_NEW_USER_EMAIL, ratings.get(ratings.size()-1).getUser().getEmail());
+        assertEquals(NEW_USER_EMAIL, ratings.get(ratings.size()-1).getUser().getEmail());
 
         // uklanjamo dodatu kategoriju
         ratingService.delete(rating.getId());

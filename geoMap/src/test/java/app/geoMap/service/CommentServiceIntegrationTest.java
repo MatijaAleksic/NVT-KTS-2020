@@ -58,8 +58,8 @@ public class CommentServiceIntegrationTest {
     @Test
     @Transactional
     public void testCreate() throws Exception {
-    	Comment comment = new Comment(DB_NEW_COMMENT_TEXT, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));  
-    	comment.setId(DB_NEW_COMMENT_ID);
+    	Comment comment = new Comment(NEW_COMMENT_TEXT, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));  
+    	comment.setId(NEW_COMMENT_ID);
     	Comment created = commentService.create(comment);
 
         assertEquals(NEW_USER_EMAIL, created.getUser().getEmail());
@@ -68,8 +68,8 @@ public class CommentServiceIntegrationTest {
     @Test
     @Transactional
     public void testUpdate() throws Exception {
-        Comment comment = new Comment(DB_NEW_COMMENT_TEXT, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL)); 
-        Comment created = commentService.update(comment,DB_NEW_COMMENT_IDD);
+        Comment comment = new Comment(NEW_COMMENT_TEXT, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL)); 
+        Comment created = commentService.update(comment,NEW_COMMENT_IDD);
 
         assertEquals(NEW_USER_EMAIL, created.getUser().getEmail());
     }
@@ -77,9 +77,9 @@ public class CommentServiceIntegrationTest {
     @Test
     @Transactional
     public void testDelete() throws Exception {
-    	commentService.delete(DB_NEW_COMMENT_IDD);
+    	commentService.delete(NEW_COMMENT_IDD);
 
-        Comment savedComment = new Comment(DB_NEW_COMMENT_TEXT, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));
-        savedComment.setId(DB_NEW_COMMENT_ID);
+        Comment savedComment = new Comment(NEW_COMMENT_TEXT, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));
+        savedComment.setId(NEW_COMMENT_ID);
     }
 }

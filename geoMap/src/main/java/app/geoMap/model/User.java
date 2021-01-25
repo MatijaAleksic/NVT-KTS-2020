@@ -47,8 +47,8 @@ public class User implements UserDetails{
 	@Column(name = "last_name" , unique = false , nullable = true)
 	private String lastName;
 	
-	@Column(name = "user_name" , unique = false , nullable = true)
-	private String userName;
+	@Column(name = "username" , unique = false , nullable = true)
+	private String username;
 	
 	@Column(name = "pasword"  , unique = false , nullable = true)
 	private String password;
@@ -64,7 +64,7 @@ public class User implements UserDetails{
 	@Column(name = "last_password_reset_date")
     private Timestamp lastPasswordResetDate;
 	
-	@ManyToMany(fetch = FetchType.LAZY)//EAGER BILO
+	@ManyToMany(fetch = FetchType.EAGER)//EAGER BILO
     @JoinTable(name = "user_authority",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
@@ -77,14 +77,14 @@ public class User implements UserDetails{
 	
 	public User(String userName, String email) {
 		super();
-		this.userName = userName;
+		this.username = userName;
 		this.email = email;
 	}
 	public User(String firstName, String lastName, String userName, String password, String email) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.userName = userName;
+		this.username = userName;
 		this.password = password;
 		this.email = email;
 	}
@@ -93,7 +93,7 @@ public class User implements UserDetails{
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.userName = userName;
+		this.username = userName;
 		this.password = password;
 		this.email = email;
 		this.culturalOffersSubscribed = culturalOffersSubscribed;
@@ -141,11 +141,11 @@ public class User implements UserDetails{
 	}
 
 	public String getUserName() {
-		return userName;
+		return username;
 	}
 
 	public void setUserName(String userName) {
-		this.userName = userName;
+		this.username = userName;
 	}
 
 	public String getPassword() {
@@ -176,14 +176,14 @@ public class User implements UserDetails{
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + username
 				+ ", password=" + password + ", email=" + email + ", culturalOffers="
 				+ culturalOffersSubscribed + "]";
 	}
 
 	@Override
 	public String getUsername() {
-		return this.userName;
+		return this.username;
 	}
 
 	@Override

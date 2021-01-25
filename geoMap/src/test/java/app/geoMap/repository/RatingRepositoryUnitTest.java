@@ -39,8 +39,8 @@ public class RatingRepositoryUnitTest {
     
     @Test
     public void testfindByUser_Id() {
-    	Rating found = ratingRepository.findByUser_Id(DB_NEW_USER_ID);
-        assertEquals(DB_NEW_USER_ID, found.getUser().getId());
+    	Rating found = ratingRepository.findByUser_Id(DB_USER_ID);
+        assertEquals(DB_USER_ID, found.getUser().getId());
     }
 
 }

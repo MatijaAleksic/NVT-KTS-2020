@@ -8,7 +8,7 @@ import app.geoMap.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>{
 
-	User findByUserName(String username);
+	User findByUsername(String username);
 	
 	User findByEmail(String email);
 	

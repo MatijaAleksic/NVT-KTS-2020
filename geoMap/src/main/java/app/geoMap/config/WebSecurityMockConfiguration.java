@@ -21,11 +21,11 @@ import app.geoMap.security.auth.RestAuthenticationEntryPoint;
 import app.geoMap.security.auth.TokenAuthenticationFilter;
 import app.geoMap.service.CustomUserDetailsService;
 
+@Profile("Test")
 @Configuration
-// Ukljucivanje podrske za anotacije "@Pre*" i "@Post*" koje ce aktivirati autorizacione provere za svaki pristup metodi
+//Ukljucivanje podrske za anotacije "@Pre*" i "@Post*" koje ce aktivirati autorizacione provere za svaki pristup metodi
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Profile("NotTest")
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityMockConfiguration extends WebSecurityConfigurerAdapter {
 
     // Implementacija PasswordEncoder-a koriscenjem BCrypt hashing funkcije.
     // BCrypt po defalt-u radi 10 rundi hesiranja prosledjene vrednosti.
@@ -39,8 +39,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private CustomUserDetailsService jwtUserDetailsService;
 
     // Handler za vracanje 401 kada klijent sa neodogovarajucim korisnickim imenom i lozinkom pokusa da pristupi resursu
-    @Autowired
-    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+//    @Autowired
+//    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     // Registrujemo authentication manager koji ce da uradi autentifikaciju korisnika za nas
     @Bean
@@ -53,7 +53,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     //kao i kroz koji enkoder da provuce lozinku koju je dobio od klijenta u zahtevu da bi adekvatan hash koji dobije kao rezultat bcrypt algoritma uporedio sa onim koji se nalazi u bazi (posto se u bazi ne cuva plain lozinka)
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
+    	auth
+        .inMemoryAuthentication()
+        .withUser("markomarkovic").password("MarkoMarkovic12").roles("ADMIN");
+        //auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
     // Injektujemo implementaciju iz TokenUtils klase kako bismo mogli da koristimo njene metode za rad sa JWT u TokenAuthenticationFilteru
@@ -63,28 +66,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     // Definisemo prava pristupa odredjenim URL-ovima
     @Override
     protected void configure(HttpSecurity http) throws 	Exception {
-        http
-                // komunikacija izmedju klijenta i servera je stateless posto je u pitanju REST aplikacija
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
-                // sve neautentifikovane zahteve obradi uniformno i posalji 401 gresku
-                .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
-
-                // svim korisnicima dopusti da pristupe putanji /auth/**
-                .authorizeRequests().antMatchers("/auth/**").permitAll()
-
-                // umesto anotacija iynad svake metode, moze i ovde da se proveravaju prava pristupa ya odredjeni URL
-                //.antMatchers(HttpMethod.GET, "/api/cultural-content-category").hasRole("ROLE_ADMIN")
-
-                // za svaki drugi zahtev korisnik mora biti autentifikovan
-                .anyRequest().authenticated().and()
-                // za development svrhe ukljuci konfiguraciju za CORS iz WebConfig klase
-                .cors().and()
-
-                // umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
-                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),
-                        BasicAuthenticationFilter.class);
-        // zbog jednostavnosti primera
+    	http.authorizeRequests().anyRequest().fullyAuthenticated();
+        http.httpBasic();
         http.csrf().disable();
     }
 
@@ -93,7 +76,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         // TokenAuthenticationFilter ce ignorisati sve ispod navedene putanje
         web.ignoring().antMatchers(HttpMethod.POST, "/auth/log-in");
-        //web.ignoring().antMatchers(HttpMethod.GET, "/api/images");
+        web.ignoring().antMatchers(HttpMethod.GET, "/api/images");
         web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html",
                 "/**/*.css", "/**/*.js");
     }

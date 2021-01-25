@@ -3,6 +3,8 @@ package app.geoMap.service;
 import app.geoMap.model.User;
 import app.geoMap.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -58,5 +60,5 @@ public class CustomUserDetailsService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
-
+    
 }

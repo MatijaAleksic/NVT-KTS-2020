@@ -57,8 +57,8 @@ public class RatingServiceIntegrationTest {
 
     @Test
     public void testCreate() throws Exception {
-    	Rating rating = new Rating(DB_NEW_RATING_VALUE, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL)); 
-        rating.setId(DB_NEW_RATING_ID);
+    	Rating rating = new Rating(NEW_RATING_VALUE, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL)); 
+        rating.setId(NEW_RATING_ID);
     	Rating created = ratingService.create(rating);
 
         assertEquals(NEW_USER_EMAIL, created.getUser().getEmail());
@@ -67,8 +67,8 @@ public class RatingServiceIntegrationTest {
     @Test
     @Transactional
     public void testUpdate() throws Exception {
-        Rating user = new Rating(DB_NEW_RATING_VALUE, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));
-        Rating created = ratingService.update(user,DB_NEW_RATING_IDD);
+        Rating user = new Rating(NEW_RATING_VALUE, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));
+        Rating created = ratingService.update(user,NEW_RATING_IDD);
 
         assertEquals(NEW_USER_EMAIL, created.getUser().getEmail());
     }
@@ -76,10 +76,10 @@ public class RatingServiceIntegrationTest {
     @Test
     @Transactional
     public void testDelete() throws Exception {
-    	ratingService.delete(DB_NEW_RATING_IDD);
+    	ratingService.delete(NEW_RATING_IDD);
 
-        Rating savedRating = new Rating(DB_NEW_RATING_VALUE, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));
-        savedRating.setId(DB_NEW_RATING_ID);
+        Rating savedRating = new Rating(NEW_RATING_VALUE, new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));
+        savedRating.setId(NEW_RATING_ID);
     }
 
 }
