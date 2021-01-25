@@ -32,7 +32,7 @@ public class News {
 	@Column(name = "text" , nullable = true , unique = false)
 	private String text;
 	
-	@Column(name="cretion_date" , nullable = true , unique = false)
+	@Column(name="creation_date" , nullable = true , unique = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationDate;
 	

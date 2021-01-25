@@ -7,5 +7,7 @@ import app.geoMap.model.News;
 
 @Repository
 public interface NewsRepository extends JpaRepository<News, Long>{
+	
+	News findByTitle(String title);
 
 }

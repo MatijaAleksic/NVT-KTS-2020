@@ -85,10 +85,16 @@ public class CultureSubtypeService implements ServiceInterface<CultureSubtype>{
 
 	@Override
 	public CultureSubtype create(CultureSubtype entity) throws Exception {
-		if(cultureTypeService.findOne(entity.getId()) != null){
+		if(cultureSubtypeRepository.findByName(entity.getName()) != null){
             throw new Exception("User with username already exists");
         }
-        return cultureSubtypeRepository.save(entity);
+		
+		CultureSubtype c = new CultureSubtype();
+		c.setId(entity.getId());
+		c.setName(entity.getName());
+	
+        c = cultureSubtypeRepository.save(entity);
+        return c;
 	}
 
 

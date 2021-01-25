@@ -1,5 +1,6 @@
 package app.geoMap.service;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import app.geoMap.model.CultureSubtype;
 import app.geoMap.model.CultureType;
 import app.geoMap.repository.CultureTypeRepository;
 
@@ -36,7 +38,14 @@ public class CultureTypeService implements ServiceInterface<CultureType>{
 		if(cultureTypeRepository.findByName(entity.getName()) != null) {
 			throw new Exception("Culture type with given name already exists!");
 		}
-		return cultureTypeRepository.save(entity);
+		
+		CultureType cultureType = new CultureType();
+		cultureType.setId(entity.getId());
+		cultureType.setName(entity.getName());
+		//cultureType.setCultureSubtypes(new HashSet<CultureSubtype>());
+		
+		cultureType = cultureTypeRepository.save(cultureType);
+		return cultureType;
 	}
 
 
@@ -48,9 +57,9 @@ public class CultureTypeService implements ServiceInterface<CultureType>{
         }
         existingCultureType.setName(entity.getName());
 
-        if(cultureTypeRepository.findByNameAndIdNot(existingCultureType.getName(), id) != null){
+        /*if(cultureTypeRepository.findByNameAndIdNot(existingCultureType.getName(), id) != null){
             throw new Exception("Cultural content type with given name already exists");
-        }
+        }*/
         return cultureTypeRepository.save(existingCultureType);
     }
 
