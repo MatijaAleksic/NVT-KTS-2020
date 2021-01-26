@@ -1,11 +1,14 @@
 package app.geoMap.controller;
 
 import app.geoMap.dto.CulturalOfferDTO;
+import app.geoMap.dto.UserLoginDTO;
+import app.geoMap.dto.UserTokenStateDTO;
 import app.geoMap.model.CulturalOffer;
 
 import static app.geoMap.constants.CulturalOfferConstants.*;
 
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +18,13 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.annotation.Order;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -38,10 +43,26 @@ public class CulturalOfferControllerIntegrationTest {
 	@Autowired 
 	private CulturalOfferService culturalOfferService;
 	
+	private String accessToken;
+	
+	@Before
+	public void login() {
+		ResponseEntity<UserTokenStateDTO> responseEntity = restTemplate.postForEntity("/auth/log-in", 
+				new UserLoginDTO("markoMarkovic@maildrop.cc", "MarkoMarkovic12"), UserTokenStateDTO.class);
+		accessToken = "Bearer " + responseEntity.getBody().getAccessToken();
+	}
+	
+	
 	@Test
+	@Order(1)
 	public void testGetAllCulturalOffers() {
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
+		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+		
 		ResponseEntity<CulturalOfferDTO[]> responseEntity =
-				restTemplate.getForEntity("/api/cultural-offers", CulturalOfferDTO[].class);
+				restTemplate.exchange("/api/cultural-offers", HttpMethod.GET, httpEntity, CulturalOfferDTO[].class);
 		
 		CulturalOfferDTO[] culturalOffers = responseEntity.getBody();
 		
@@ -52,9 +73,14 @@ public class CulturalOfferControllerIntegrationTest {
 	}
 	
 	@Test
+	@Order(2)
 	public void testGetCulturalOffer() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
+		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+		
 		ResponseEntity<CulturalOfferDTO> responseEntity =
-				restTemplate.getForEntity("/api/cultural-offers/1", CulturalOfferDTO.class);
+				restTemplate.exchange("/api/cultural-offers/1", HttpMethod.GET, httpEntity, CulturalOfferDTO.class);
 		
 		CulturalOfferDTO culturalOffer = responseEntity.getBody();
 		
@@ -66,13 +92,18 @@ public class CulturalOfferControllerIntegrationTest {
 	
 	
 	@Test
+	@Order(3)
+	@Transactional
+    @Rollback(true)
 	public void testCreateCulturalOffer() throws Exception {
 		int size = culturalOfferService.findAll().size();
 		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
+		HttpEntity<CulturalOfferDTO> httpEntity = new HttpEntity<>(new CulturalOfferDTO(null, NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT), headers);
+		
 		ResponseEntity<CulturalOfferDTO> responseEntity =
-				restTemplate.postForEntity("/api/cultural-offers", 
-						new CulturalOfferDTO(null, NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT),
-						CulturalOfferDTO.class);
+				restTemplate.exchange("/api/cultural-offers", HttpMethod.POST, httpEntity, CulturalOfferDTO.class);
 		
 		CulturalOfferDTO culturalOffer = responseEntity.getBody();
 		
@@ -89,13 +120,16 @@ public class CulturalOfferControllerIntegrationTest {
 	}
 	
 	@Test
+	@Order(4)
 	@Transactional
     @Rollback(true)
 	public void testUpdateCulturalOffer() throws Exception {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
+		HttpEntity<CulturalOfferDTO> httpEntity = new HttpEntity<>(new CulturalOfferDTO(DB_CO_ID, NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT), headers);
+		
 		ResponseEntity<CulturalOfferDTO> responseEntity =
-				restTemplate.exchange("/api/cultural-offers/1" , HttpMethod.PUT,
-						new HttpEntity<CulturalOfferDTO>(new CulturalOfferDTO(DB_CO_ID, NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT)),
-						CulturalOfferDTO.class);
+				restTemplate.exchange("/api/cultural-offers/1" , HttpMethod.PUT, httpEntity, CulturalOfferDTO.class);
 		
 		CulturalOfferDTO culturalOffer = responseEntity.getBody();
 		
@@ -118,9 +152,14 @@ public class CulturalOfferControllerIntegrationTest {
 	}
 	
 	@Test
+	@Order(5)
 	@Transactional
     @Rollback(true)
 	public void testDeleteCulturalOffer() throws Exception {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
+		HttpEntity<CulturalOfferDTO> httpEntity = new HttpEntity<>(headers);
+		
 		CulturalOffer culturalOffer = culturalOfferService.create(new CulturalOffer(NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT));
 		
 		List<CulturalOffer> culturalOffers = culturalOfferService.findAll();
@@ -128,7 +167,7 @@ public class CulturalOfferControllerIntegrationTest {
 		
 		ResponseEntity<Void> responseEntity =
 				restTemplate.exchange("/api/cultural-offers/" + culturalOffer.getId(),
-				HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
+				HttpMethod.DELETE, httpEntity, Void.class);
 		
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals(size - 1, culturalOfferService.findAll().size());

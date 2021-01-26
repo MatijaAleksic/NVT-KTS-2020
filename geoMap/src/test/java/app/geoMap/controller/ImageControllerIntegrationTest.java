@@ -7,7 +7,6 @@ import app.geoMap.model.Image;
 import app.geoMap.repository.ImageRepository;
 import app.geoMap.service.CustomUserDetailsService;
 import app.geoMap.service.ImageService;
-import  app.geoMap.controller.ImageDTOList;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
