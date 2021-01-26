@@ -60,7 +60,7 @@ public class CulturalOfferServiceIntegrationTest {
 	
 	@Test
 	public void testCreate() throws Exception {
-		CulturalOffer culturalOffer = new CulturalOffer (NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT);
+		CulturalOffer culturalOffer = new CulturalOffer (NEW_CO_NAME, NEW_CO_LON, NEW_CO_LAT);
 		culturalOffer.setId(NEW_CO_ID);
 		CulturalOffer created = culturalOfferService.create(culturalOffer);
 		
@@ -80,7 +80,7 @@ public class CulturalOfferServiceIntegrationTest {
 	@Test
 	@Transactional
 	public void testUpdate() throws Exception {
-		CulturalOffer culturalOffer = new CulturalOffer (NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT);
+		CulturalOffer culturalOffer = new CulturalOffer (NEW_CO_NAME, NEW_CO_LON, NEW_CO_LAT);
 		CulturalOffer created = culturalOfferService.update(culturalOffer, DB_CO_ID);
 		
 		assertEquals(NEW_CO_NAME, created.getName());
@@ -92,7 +92,7 @@ public class CulturalOfferServiceIntegrationTest {
 	public void testDelete() throws Exception {
 		
 		culturalOfferService.delete(DB_CO_ID);
-		CulturalOffer savedCO = new CulturalOffer (NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT);
+		CulturalOffer savedCO = new CulturalOffer (NEW_CO_NAME, NEW_CO_LON, NEW_CO_LAT);
 		savedCO.setId(DB_CO_ID);
 		
 	}

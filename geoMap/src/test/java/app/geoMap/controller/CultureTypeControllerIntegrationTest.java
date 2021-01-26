@@ -7,8 +7,10 @@ import static org.junit.Assert.assertNotNull;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -34,6 +36,7 @@ import static app.geoMap.constants.CultureTypeConstants.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CultureTypeControllerIntegrationTest {
 	
 	@Autowired
@@ -54,7 +57,7 @@ public class CultureTypeControllerIntegrationTest {
 	
 	@Test
 	@Order(1)
-	public void testGetAllCultureTypes() {
+	public void AtestGetAllCultureTypes() {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
@@ -66,14 +69,14 @@ public class CultureTypeControllerIntegrationTest {
 		CultureTypeDTO[] cultureTypes = responseEntity.getBody();
 		
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		assertEquals(FIND_ALL_NUMBER_OF_ITEMS_CON, cultureTypes.length);
+		assertEquals(FIND_ALL_NUMBER_OF_ITEMS, cultureTypes.length); //_DB
 		//assertEquals(DB_TYPE, cultureTypes[0].getName());
 			
 	}
 	
 	@Test
 	@Order(2)
-	public void testGetAllCultureTypesPageable() {
+	public void BtestGetAllCultureTypesPageable() {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
@@ -86,13 +89,13 @@ public class CultureTypeControllerIntegrationTest {
 		CultureTypeDTO[] cultureTypes = responseEntity.getBody();
 		
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		assertEquals(FIND_ALL_NUMBER_OF_ITEMS, cultureTypes.length);
+		assertEquals(FIND_ALL_NUMBER_OF_ITEMS, cultureTypes.length); //_D
 		assertEquals(DB_TYPE, cultureTypes[0].getName());
 	}
 	
 	@Test
 	@Order(3)
-	public void testGetCultureType() {
+	public void CtestGetCultureType() {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
@@ -114,7 +117,7 @@ public class CultureTypeControllerIntegrationTest {
 	@Order(4)
     @Transactional
     @Rollback(true)
-	public void testCreateCultureType() throws Exception {
+	public void DtestCreateCultureType() throws Exception {
 		int size = cultureTypeService.findAll().size();
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -142,15 +145,15 @@ public class CultureTypeControllerIntegrationTest {
 	@Order(5)
     @Transactional
     @Rollback(true)
-	public void testUpdateCultureType() throws Exception {
+	public void EtestUpdateCultureType() throws Exception {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
 		//headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<CultureTypeDTO> httpEntity = new HttpEntity<>(new CultureTypeDTO(DB_TYPE_ID, NEW_TYPE), headers);
+		HttpEntity<CultureTypeDTO> httpEntity = new HttpEntity<>(new CultureTypeDTO(null, NEW_TYPE), headers);
 		
 		ResponseEntity<CultureTypeDTO> responseEntity = 
-				restTemplate.exchange("/api/cultural-type/"+ TYPE_ID, HttpMethod.PUT, httpEntity, CultureTypeDTO.class );
+				restTemplate.exchange("/api/cultural-type/1", HttpMethod.PUT, httpEntity, CultureTypeDTO.class );
 		
 		CultureTypeDTO cultureType = responseEntity.getBody();
 		//provera odgovora servera
@@ -174,7 +177,7 @@ public class CultureTypeControllerIntegrationTest {
 	@Order(6)
     @Transactional
     @Rollback(true)
-	public void testDeleteCultureType() throws Exception {
+	public void FtestDeleteCultureType() throws Exception {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);

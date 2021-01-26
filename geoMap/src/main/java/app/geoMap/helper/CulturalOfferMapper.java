@@ -8,7 +8,7 @@ public class CulturalOfferMapper implements MapperInterface<CulturalOffer, Cultu
 
 	@Override
 	public CulturalOffer toEntity(CulturalOfferDTO dto) {
-		return new CulturalOffer(dto.getName(), dto.getCreationDate(), dto.getLongitude(), dto.getLatitude());
+		return new CulturalOffer(dto.getName(), dto.getLongitude(), dto.getLatitude());
 	}
 
 	@Override

@@ -28,6 +28,8 @@ public class CulturalOfferConstants {
 	public static final Integer PAGEABLE_PAGE = 0;
     public static final Integer PAGEABLE_SIZE = 2;
     public static final Integer PAGEABLE_TOTAL_ELEMENTS = 1;
+	public static final Long DB_CO_IDD = 3L;
+
 
 	
 

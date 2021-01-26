@@ -19,8 +19,10 @@ import static org.junit.Assert.assertNotNull;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -35,6 +37,8 @@ import app.geoMap.service.CulturalOfferService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+
 public class CulturalOfferControllerIntegrationTest {
 
 	@Autowired
@@ -54,8 +58,7 @@ public class CulturalOfferControllerIntegrationTest {
 	
 	
 	@Test
-	@Order(1)
-	public void testGetAllCulturalOffers() {
+	public void AtestGetAllCulturalOffers() {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
@@ -73,8 +76,7 @@ public class CulturalOfferControllerIntegrationTest {
 	}
 	
 	@Test
-	@Order(2)
-	public void testGetCulturalOffer() {
+	public void BtestGetCulturalOffer() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
@@ -92,10 +94,9 @@ public class CulturalOfferControllerIntegrationTest {
 	
 	
 	@Test
-	@Order(3)
 	@Transactional
     @Rollback(true)
-	public void testCreateCulturalOffer() throws Exception {
+	public void CtestCreateCulturalOffer() throws Exception {
 		int size = culturalOfferService.findAll().size();
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -120,13 +121,12 @@ public class CulturalOfferControllerIntegrationTest {
 	}
 	
 	@Test
-	@Order(4)
 	@Transactional
     @Rollback(true)
-	public void testUpdateCulturalOffer() throws Exception {
+	public void DtestUpdateCulturalOffer() throws Exception {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
-		HttpEntity<CulturalOfferDTO> httpEntity = new HttpEntity<>(new CulturalOfferDTO(DB_CO_ID, NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT), headers);
+		HttpEntity<CulturalOfferDTO> httpEntity = new HttpEntity<>(new CulturalOfferDTO(null, NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT), headers);
 		
 		ResponseEntity<CulturalOfferDTO> responseEntity =
 				restTemplate.exchange("/api/cultural-offers/1" , HttpMethod.PUT, httpEntity, CulturalOfferDTO.class);
@@ -135,11 +135,11 @@ public class CulturalOfferControllerIntegrationTest {
 		
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertNotNull(culturalOffer);
-		assertEquals(DB_CO_ID, culturalOffer.getId());
+		assertEquals(DB_CO_IDD, culturalOffer.getId());
 		assertEquals(NEW_CO_NAME, culturalOffer.getName());
 		
 		CulturalOffer dbCO = culturalOfferService.findOne(DB_CO_ID);
-		assertEquals(DB_CO_ID, culturalOffer.getId());
+		assertEquals(DB_CO_IDD, culturalOffer.getId());
 		assertEquals(NEW_CO_NAME, culturalOffer.getName());
 		
 		dbCO.setName(NEW_CO_NAME);
@@ -152,21 +152,20 @@ public class CulturalOfferControllerIntegrationTest {
 	}
 	
 	@Test
-	@Order(5)
 	@Transactional
     @Rollback(true)
-	public void testDeleteCulturalOffer() throws Exception {
+	public void EtestDeleteCulturalOffer() throws Exception {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
 		HttpEntity<CulturalOfferDTO> httpEntity = new HttpEntity<>(headers);
 		
-		CulturalOffer culturalOffer = culturalOfferService.create(new CulturalOffer(NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT));
+		//CulturalOffer culturalOffer = culturalOfferService.create(new CulturalOffer(NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT));
 		
 		List<CulturalOffer> culturalOffers = culturalOfferService.findAll();
 		int size = culturalOfferService.findAll().size();
 		
 		ResponseEntity<Void> responseEntity =
-				restTemplate.exchange("/api/cultural-offers/" + culturalOffer.getId(),
+				restTemplate.exchange("/api/cultural-offers/2" ,
 				HttpMethod.DELETE, httpEntity, Void.class);
 		
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());

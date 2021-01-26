@@ -40,7 +40,7 @@ public class CultureTypeService implements ServiceInterface<CultureType>{
 		}
 		
 		CultureType cultureType = new CultureType();
-		cultureType.setId(entity.getId());
+		//cultureType.setId(entity.getId());
 		cultureType.setName(entity.getName());
 		//cultureType.setCultureSubtypes(new HashSet<CultureSubtype>());
 		
@@ -56,6 +56,7 @@ public class CultureTypeService implements ServiceInterface<CultureType>{
             throw new Exception("Cultural content type with given id doesn't exist");
         }
         existingCultureType.setName(entity.getName());
+        existingCultureType.setCultureSubtypes(entity.getCultureSubtypes());
 
         /*if(cultureTypeRepository.findByNameAndIdNot(existingCultureType.getName(), id) != null){
             throw new Exception("Cultural content type with given name already exists");

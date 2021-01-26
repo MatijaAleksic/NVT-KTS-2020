@@ -37,6 +37,11 @@ import app.geoMap.service.CultureTypeServiceUnitTest;
 import app.geoMap.service.NewsServiceIntegrationTest;
 import app.geoMap.service.NewsServiceUnitTest;
 
+import app.geoMap.controller.CulturalOfferControllerIntegrationTest;
+import app.geoMap.controller.CultureSubtypeControllerIntegrationTest;
+import app.geoMap.controller.CultureTypeControllerIntegrationTest;
+import app.geoMap.controller.NewsControllerIntegrationTest;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -52,9 +57,10 @@ import org.springframework.test.context.TestPropertySource;
 	CulturalOfferServiceIntegrationTest.class, CulturalOfferServiceUnitTest.class, CultureSubtypeServiceIntegrationTest.class,
 	CultureSubtypeServiceUnitTest.class, CultureTypeServiceIntegrationTest.class, CultureTypeServiceUnitTest.class,
 	NewsServiceIntegrationTest.class, NewsServiceUnitTest.class, CulturalOfferRepositoryIntegrationTest.class,
-	CulturalOfferRepositoryUnitTest.class, CultureSubtypeRepositoryIntegrationTest.class, CultureSybtypeRepositoryUnitTest.class,
+	CultureSubtypeRepositoryIntegrationTest.class, CultureSybtypeRepositoryUnitTest.class,
 	CultureTypeRepositoryIntegraionTest.class, CultureTypeRepositoryUnitTest.class, NewsRepositoryIntegrationTest.class,
-	NewsRepositoryUnitTest.class})
+	NewsRepositoryUnitTest.class, CulturalOfferControllerIntegrationTest.class, CultureSubtypeControllerIntegrationTest.class,
+	CultureTypeControllerIntegrationTest.class, NewsControllerIntegrationTest.class })
 @TestPropertySource("classpath:test.properties")
 public class SuiteAll {
 	

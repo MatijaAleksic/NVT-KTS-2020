@@ -43,7 +43,7 @@ public class CultureTypeServiceIntegrationTest {
 		
 		List<CultureType> found = cultureTypeService.findAll();
 		
-		assertEquals(FIND_ALL_NUMBER_OF_ITEMS_DB, found.size());
+		assertEquals(FIND_ALL_NUMBER_OF_ITEMS, found.size());
 	}
 	
 	@Test

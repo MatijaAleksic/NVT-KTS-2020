@@ -6,8 +6,10 @@ import static org.junit.Assert.assertNotNull;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -33,6 +35,7 @@ import static app.geoMap.constants.NewsConstants.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class NewsControllerIntegrationTest {
 	
 	@Autowired
@@ -53,7 +56,7 @@ public class NewsControllerIntegrationTest {
 
 	@Test
 	@Order(1)
-	public void testGetAllNews() {
+	public void AtestGetAllNews() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
@@ -72,7 +75,7 @@ public class NewsControllerIntegrationTest {
 	
 	@Test
 	@Order(2)
-	public void testGetNews() {
+	public void BtestGetNews() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
@@ -92,7 +95,7 @@ public class NewsControllerIntegrationTest {
 	@Order(3)
 	@Transactional
     @Rollback(true)
-	public void testCreateNews() throws Exception {
+	public void CtestCreateNews() throws Exception {
 		int size = newsService.findAll().size();
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -104,9 +107,9 @@ public class NewsControllerIntegrationTest {
 		
 		NewsDTO news = responseEntity.getBody();
 		
-		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 		assertNotNull(news);
-		assertEquals(DB_NEWS_TITLE, news.getTitle());
+		assertEquals(NEWS_TITLE, news.getTitle());
 		
 		List<News> allNews = newsService.findAll();
 		assertEquals(size + 1, allNews.size());
@@ -119,7 +122,7 @@ public class NewsControllerIntegrationTest {
 	@Order(4)
 	@Transactional
     @Rollback(true)
-	public void testUpdateNews() throws Exception {
+	public void DtestUpdateNews() throws Exception {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
@@ -149,7 +152,7 @@ public class NewsControllerIntegrationTest {
 	@Order(5)
 	@Transactional
     @Rollback(true)
-	public void testDeleteNews() throws Exception {
+	public void EtestDeleteNews() throws Exception {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);

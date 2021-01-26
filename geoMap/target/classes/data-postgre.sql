@@ -1,7 +1,7 @@
 INSERT INTO user_table (id, user_type, username, email,pasword) VALUES (1, 'ADMINISTRATOR', 'markomarkovic','markoMarkovic@maildrop.cc','$2y$10$kpg/A3GcC2NE9ZcbpAEEkuGMwlKOJQO6OXv8sDNY9QjUO5murie0.');
 INSERT INTO user_table (id, user_type, username, email,pasword) VALUES (2, 'USER', 'peroperic', 'peroPerovic@maildrop.cc','$2y$10$zmFxx7gTpz5pqnBylnL3o.Zv/A.46vNRc.SY4KmLp8FiSmUuyqDsi');
 
-INSERT INTO cultural_offer(cultural_offer_id, name, creation_date, longitude, latitude) values (1,'Cultural offer 1', DATE '2021-01-23', 40.5, 20.5);
+INSERT INTO cultural_offer(cultural_offer_id, name, longitude, latitude) values (1,'Cultural offer 1', 40.5, 20.5);
 
 INSERT INTO rating(rating_id, value, cultural_offer_cultural_offer_id, user_id) values (1, 1, (SELECT cultural_offer_id FROM cultural_offer WHERE cultural_offer_id = '1'),(SELECT id FROM user_table WHERE id = '1'));
 
@@ -16,8 +16,8 @@ insert into user_authority (user_id, authority_id) values (1, 1); -- admin has R
 insert into user_authority (user_id, authority_id) values (2, 2); -- user has ROLE_GUEST
 
 INSERT INTO culture_type (culture_type_id, name) values (1, 'Institucija');
-INSERT INTO culture_type (culture_type_id, name) values (2, 'Kulturno Dobro');
-INSERT INTO culture_type (culture_type_id, name) values (3, 'Manifestacija');
+--INSERT INTO culture_type (culture_type_id, name) values (2, 'Kulturno Dobro');
+--INSERT INTO culture_type (culture_type_id, name) values (3, 'Manifestacija');
 
 INSERT INTO culture_subtype (culture_subtype_id, name) values (1, 'Muzej');
 

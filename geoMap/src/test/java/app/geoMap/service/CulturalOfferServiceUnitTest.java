@@ -44,8 +44,8 @@ public class CulturalOfferServiceUnitTest {
 	@Before
 	public void setUp() {
 		List<CulturalOffer> culturalOffers = new ArrayList<>();
-		CulturalOffer newCO = new CulturalOffer(NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT);
-		CulturalOffer dbCO = new CulturalOffer(DB_CO_NAME, DB_CO_DATE, DB_CO_LON, DB_CO_LAT);
+		CulturalOffer newCO = new CulturalOffer(NEW_CO_NAME, NEW_CO_LON, NEW_CO_LAT);
+		CulturalOffer dbCO = new CulturalOffer(DB_CO_NAME, DB_CO_LON, DB_CO_LAT);
 		//culturalOffers.add(newCO);
 		dbCO.setId(1L);
 		culturalOffers.add(dbCO);
@@ -93,7 +93,7 @@ public class CulturalOfferServiceUnitTest {
 	
 	@Test
 	public void testCreate() throws Exception {
-		CulturalOffer culturalOffer = new CulturalOffer (NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT);
+		CulturalOffer culturalOffer = new CulturalOffer (NEW_CO_NAME, NEW_CO_LON, NEW_CO_LAT);
 		CulturalOffer created = culturalOfferService.create(culturalOffer);
 		
 		verify(culturalOfferRepository, times(1)).findByName(NEW_CO_NAME);
@@ -115,7 +115,7 @@ public class CulturalOfferServiceUnitTest {
 	@Test
 	@Transactional
 	public void testUpdate() throws Exception {
-		CulturalOffer culturalOffer = new CulturalOffer (NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT);
+		CulturalOffer culturalOffer = new CulturalOffer (NEW_CO_NAME, NEW_CO_LON, NEW_CO_LAT);
 		CulturalOffer created = culturalOfferService.update(culturalOffer, DB_CO_ID);
 		
 		verify(culturalOfferRepository, times(1)).findById(DB_CO_ID);
@@ -128,7 +128,7 @@ public class CulturalOfferServiceUnitTest {
 	public void testDelete() throws Exception {
 		
 		culturalOfferService.delete(DB_CO_ID);
-		CulturalOffer savedCO = new CulturalOffer (NEW_CO_NAME, NEW_CO_DATE, NEW_CO_LON, NEW_CO_LAT);
+		CulturalOffer savedCO = new CulturalOffer (NEW_CO_NAME, NEW_CO_LON, NEW_CO_LAT);
 		savedCO.setId(DB_CO_ID);
 		
 		verify(culturalOfferRepository, times(1)).findById(DB_CO_ID);

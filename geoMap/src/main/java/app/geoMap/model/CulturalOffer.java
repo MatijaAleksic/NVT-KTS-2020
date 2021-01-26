@@ -80,10 +80,9 @@ public class CulturalOffer {
 
 	public CulturalOffer() {}
 	
-	public CulturalOffer(String name, Date creationDate, float longitude, float latitude)
+	public CulturalOffer(String name,  float longitude, float latitude)
 	{
 		this.name = name;
-		this.creationDate = creationDate;
 		this.longitude = longitude;
 		this.latitude = latitude;
 	}

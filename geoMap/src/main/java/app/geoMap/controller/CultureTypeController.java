@@ -49,12 +49,12 @@ public class CultureTypeController {
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value= "/by-page",method = RequestMethod.GET)
-	public ResponseEntity<Page<CultureTypeDTO>> getAllCultureTypes(Pageable pageable){
+	public ResponseEntity<List<CultureTypeDTO>> getAllCultureTypes(Pageable pageable){
 		Page<CultureType> page = cultureTypeService.findAll(pageable);
 		List<CultureTypeDTO> cultureTypeDTOS = toCultureTypeDTOList(page.toList());
-		Page<CultureTypeDTO> pageCultureTypeDTOS = new PageImpl<>(cultureTypeDTOS,page.getPageable(),page.getTotalElements());
+		//Page<CultureTypeDTO> pageCultureTypeDTOS = new PageImpl<>(cultureTypeDTOS,page.getPageable(),page.getTotalElements());
 		
-		return new ResponseEntity<>(pageCultureTypeDTOS, HttpStatus.OK);	
+		return new ResponseEntity<>(cultureTypeDTOS, HttpStatus.OK);	
 	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
