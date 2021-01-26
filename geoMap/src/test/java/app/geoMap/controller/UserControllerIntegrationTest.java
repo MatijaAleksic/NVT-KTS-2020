@@ -1,21 +1,27 @@
 package app.geoMap.controller;
 
 import app.geoMap.dto.UserDTO;
+import app.geoMap.dto.UserLoginDTO;
+import app.geoMap.dto.UserTokenStateDTO;
 import app.geoMap.model.User;
+import app.geoMap.service.CustomUserDetailsService;
 import app.geoMap.service.UserService;
+
+import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,10 +34,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
-//@EnableAutoConfiguration(exclude = {
-//		app.geoMap.config.WebConfiguration.class,
-//		app.geoMap.config.WebSecurityConfiguration.class,
-//})
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserControllerIntegrationTest {
 	
 	@Autowired
@@ -39,12 +42,44 @@ public class UserControllerIntegrationTest {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    CustomUserDetailsService userDetailsService;
+    
 
-    @Test
-    public void testGetAllUsersPageable() {
+	private String accessToken;
+
+	@Before
+	public void loginAdmin() {
+		ResponseEntity<UserTokenStateDTO> responseEntity = restTemplate.postForEntity("/auth/log-in",
+				new UserLoginDTO("markoMarkovic@maildrop.cc", "MarkoMarkovic12"), UserTokenStateDTO.class);
+		accessToken = "Bearer " + responseEntity.getBody().getAccessToken();
+	}	
+	
+	@Test
+    public void AtestGetUsers() {
+		HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+        
         ResponseEntity<UserDTO[]> responseEntity =
-                restTemplate.getForEntity("/api/users/by-page",
-                        UserDTO[].class);
+                restTemplate.exchange("/api/users",HttpMethod.GET, httpEntity, UserDTO[].class);
+
+        UserDTO[] users = responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(FIND_ALL_NUMBER_OF_ITEMS, users.length);
+        assertEquals(DB_USER_EMAIL, users[0].getEmail());
+    }
+	
+    @Test
+    public void BtestGetAllUsersPageable() {
+    	HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+        
+        ResponseEntity<UserDTO[]> responseEntity =
+                restTemplate.exchange("/api/users/by-page?page=0&size=2",HttpMethod.GET, httpEntity, UserDTO[].class);
 
         UserDTO[] users = responseEntity.getBody();
 
@@ -53,35 +88,15 @@ public class UserControllerIntegrationTest {
         assertEquals(DB_USER_EMAIL, users[0].getEmail());
     }
     
-    
-    @Test
-    public void testGetUsers() {
-
-//        login(DB_USER_EMAIL, DB_USER_PASSWORD);
-//
-//        //postavimo JWT token u zaglavlje zahteva da bi bilo dozvoljeno da pozovemo funkcionalnost
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Authorization", accessToken);
-//        //kreiramo objekat koji saljemo u sklopu zahteva
-//        // objekat nema telo, vec samo zaglavlje, jer je rec o GET zahtevu
-//        HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
-
-        ResponseEntity<UserDTO[]> responseEntity =
-                restTemplate.getForEntity("/api/users",
-                        UserDTO[].class);
-
-        UserDTO[] users = responseEntity.getBody();
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(FIND_ALL_NUMBER_OF_ITEMS, users.length);
-        assertEquals(DB_USER_EMAIL, users[0].getEmail());
-    }
-
 
     @Test
-    public void testGetUser() {
+    public void CtestGetUser() {
+    	HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+        
         ResponseEntity<UserDTO> responseEntity =
-                restTemplate.getForEntity("/api/users/1", UserDTO.class);
+                restTemplate.exchange("/api/users/1",HttpMethod.GET, httpEntity, UserDTO.class);
 
         UserDTO user = responseEntity.getBody();
 
@@ -92,77 +107,69 @@ public class UserControllerIntegrationTest {
 
     @Test
     @Transactional
-    public void testCreateUser() throws Exception {
-        int size = userService.findAll().size(); // broj slogova pre ubacivanja novog
-
+    @Rollback(true)
+    public void DtestCreateUser() throws Exception {
+    	HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(new UserDTO(null,NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL),headers);
+        
+        int size = userService.findAll().size();
+        
         ResponseEntity<UserDTO> responseEntity =
-                restTemplate.postForEntity("/api/users",
-                        new UserDTO(null, NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL),
-                        UserDTO.class);
+                restTemplate.exchange("/api/users",HttpMethod.POST, httpEntity, UserDTO.class);
 
-        // provera odgovora servera
         UserDTO user = responseEntity.getBody();
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertNotNull(user);
         assertEquals(NEW_USER_EMAIL, user.getEmail());
 
         List<User> users = userService.findAll();
-        assertEquals(size + 1, users.size()); // mora biti jedan vise slog sada nego pre
-        // poslednja kategorija u listi treba da bude nova kategorija koja je ubacena u testu
+        assertEquals(size + 1, users.size());
         assertEquals(NEW_USER_EMAIL, users.get(users.size()-1).getEmail());
 
-        // uklanjamo dodatu kategoriju
         userService.delete(user.getId());
     }
 
     @Test
     @Transactional
-    public void testUpdateUser() throws Exception {
+    @Rollback(true)
+    public void EtestUpdateUser() throws Exception {
+    	HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(new UserDTO(null,NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL),headers);
+        
+        
         ResponseEntity<UserDTO> responseEntity =
-                restTemplate.exchange("/api/cultural-content-category/1", HttpMethod.PUT,
-                        new HttpEntity<UserDTO>(new UserDTO(DB_USER_ID, NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL)),
-                        UserDTO.class);
+                restTemplate.exchange("/api/users/2",HttpMethod.PUT, httpEntity, UserDTO.class);
 
         UserDTO user = responseEntity.getBody();
 
-        // provera odgovora servera
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNotNull(user);
-        assertEquals(DB_USER_ID, user.getId());
+        assertEquals(DB_USER_IDD, user.getId());
         assertEquals(NEW_USER_EMAIL, user.getEmail());
 
-        // provera da li je izmenjen slog u bazi
-        User dbUser = userService.findOne(DB_USER_ID);
-        assertEquals(DB_USER_ID, user.getId());
+        User dbUser = userService.findOne(DB_USER_IDD);
+        assertEquals(DB_USER_IDD, user.getId());
         assertEquals(NEW_USER_EMAIL, user.getEmail());
 
-        // vracanje podatka na staru vrednost
-        dbUser.setFirstName(NEW_NAME);
-        dbUser.setLastName(NEW_LAST_NAME);
-        dbUser.setUserName(NEW_USER_NAME);
-        dbUser.setPassword(NEW_PASSWORD);
-        dbUser.setEmail(NEW_USER_EMAIL);
         userService.update(dbUser, dbUser.getId());
     }
 
     @Test
     @Transactional
-    public void testDeleteUser() throws Exception {
-        // ubacimo kategoriju koju cemo brisati
-        User user = userService.create(new User(NEW_NAME, NEW_LAST_NAME, NEW_USER_NAME, NEW_PASSWORD, NEW_USER_EMAIL));
-        // preuzmemo trenutni broj kategorija
-        List<User> users = userService.findAll();
+    @Rollback(true)
+    public void FtestDeleteUser() throws Exception {
+    	HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+        
         int size = userService.findAll().size();
 
-        // poziv REST servisa za brisanje
         ResponseEntity<Void> responseEntity =
-                restTemplate.exchange("/api/users/" + user.getId(),
-                        HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
+                restTemplate.exchange("/api/users/2",HttpMethod.DELETE, httpEntity, Void.class);
 
-        // provera odgovora servera
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-        // mora biti jedan manje slog sada nego pre
         assertEquals(size - 1, userService.findAll().size());
     }
 }

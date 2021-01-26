@@ -11,6 +11,7 @@ public class UserConstants {
     public static final String NEW_ENCODED_PASSWORD = "$2a$10$g1.mB7UzeKbVycc4A4ALPO7am8d2kAAyR7jfVdo2LpWCUjQjdgvf2";
     
     public static final Long DB_USER_ID = 1L;
+    public static final Long DB_USER_IDD = 2L;
     
     public static final String NEW_USER_EMAIL = "matijaAleksic@maildrop.cc";
     public static final String NEW_USER_NAME = "matija123";

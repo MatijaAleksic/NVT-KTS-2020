@@ -2,6 +2,10 @@ import app.geoMap.repository.UserRepositoryIntegrationTest;
 import app.geoMap.repository.UserRepositoryUnitTest;
 import app.geoMap.repository.RatingRepositoryIntegrationTest;
 import app.geoMap.repository.RatingRepositoryUnitTest;
+import app.geoMap.controller.CommentControllerIntegrationTest;
+import app.geoMap.controller.ImageControllerIntegrationTest;
+import app.geoMap.controller.RatingControllerIntegrationTest;
+import app.geoMap.controller.UserControllerIntegrationTest;
 import app.geoMap.repository.CommentRepositoryIntegrationTest;
 import app.geoMap.repository.CommentRepositoryUnitTest;
 import app.geoMap.repository.ImageRepositoryIntegrationTest;
@@ -45,10 +49,10 @@ import org.springframework.test.context.TestPropertySource;
 @RunWith(Suite.class)
 @SuiteClasses({UserServiceIntegrationTest.class, RatingServiceIntegrationTest.class,ImageServiceIntegrationTest.class,
 	CommentServiceIntegrationTest.class, UserRepositoryIntegrationTest.class, RatingRepositoryIntegrationTest.class,
-	UserServiceUnitTest.class,
-	CommentServiceUnitTest.class, RatingServiceUnitTest.class, UserRepositoryUnitTest.class, ImageRepositoryUnitTest.class,
-	CommentRepositoryUnitTest.class, RatingRepositoryUnitTest.class,
-	ImageRepositoryIntegrationTest.class,CommentRepositoryIntegrationTest.class, ImageServiceUnitTest.class,
+	UserServiceUnitTest.class,CommentServiceUnitTest.class, RatingServiceUnitTest.class, UserRepositoryUnitTest.class,
+	ImageRepositoryUnitTest.class,CommentRepositoryUnitTest.class, RatingRepositoryUnitTest.class,ImageRepositoryIntegrationTest.class,
+	CommentRepositoryIntegrationTest.class, ImageServiceUnitTest.class, UserControllerIntegrationTest.class,
+	RatingControllerIntegrationTest.class, CommentControllerIntegrationTest.class, ImageControllerIntegrationTest.class,
 	CulturalOfferServiceIntegrationTest.class, CulturalOfferServiceUnitTest.class, CultureSubtypeServiceIntegrationTest.class,
 	CultureSubtypeServiceUnitTest.class, CultureTypeServiceIntegrationTest.class, CultureTypeServiceUnitTest.class,
 	NewsServiceIntegrationTest.class, NewsServiceUnitTest.class, CulturalOfferRepositoryIntegrationTest.class,

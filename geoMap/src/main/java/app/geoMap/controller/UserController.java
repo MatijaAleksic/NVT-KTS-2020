@@ -33,7 +33,7 @@ public class UserController {
 
     private UserMapper userMapper;
 
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<User> users = userService.findAll();
@@ -41,6 +41,7 @@ public class UserController {
         return new ResponseEntity<>(toUserDTOList(users), HttpStatus.OK);
     }
     
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value= "/by-page",method = RequestMethod.GET)
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
         Page<User> page = userService.findAll(pageable);
@@ -61,7 +62,7 @@ public class UserController {
         return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO){
         User user;
@@ -74,7 +75,7 @@ public class UserController {
         return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.CREATED);
     }
     
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO, @PathVariable Long id){
         User user;
@@ -87,8 +88,7 @@ public class UserController {
         return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasRole('ROLE_USER')"+" && hasRole('ROLE_ADMIN')")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.DELETE)
     public ResponseEntity<Void> deleteUser(@PathVariable Long id){
         try {

@@ -74,7 +74,7 @@ public class RatingService implements ServiceInterface<Rating>{
 
 	@Override
 	public Rating create(Rating entity) throws Exception {
-		if(raitingRepository.findById(entity.getId()).orElse(null) != null){
+		if(raitingRepository.findByValue(entity.getValue()) != null){
             throw new Exception("Rating with given id already exists");
         } 
         return raitingRepository.save(entity);

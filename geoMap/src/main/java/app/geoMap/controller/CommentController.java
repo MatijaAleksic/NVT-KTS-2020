@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,16 +29,25 @@ public class CommentController {
 
     private CommentMapper commentMapper;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<CommentDTO>> getAllComments() {
         List<Comment> comments = commentService.findAll();
 
         return new ResponseEntity<>(toCommentDTOList(comments), HttpStatus.OK);
     }
+    
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @RequestMapping(value= "/by-page",method = RequestMethod.GET)
+    public ResponseEntity<List<CommentDTO>> getAllComments(Pageable pageable) {
+        Page<Comment> page = commentService.findAll(pageable);
+        List<CommentDTO> commentDTOS = toCommentDTOList(page.toList());
 
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @RequestMapping(value="/get-comment{id}", method=RequestMethod.GET)
+        return new ResponseEntity<>(commentDTOS, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<CommentDTO> getComment(@PathVariable Long id){
     	Comment comment = commentService.findOne(id);
         if(comment == null){
@@ -46,7 +57,7 @@ public class CommentController {
         return new ResponseEntity<>(commentMapper.toDto(comment), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommentDTO> createComment(@RequestBody CommentDTO commentDTO){
     	Comment comment;
@@ -59,7 +70,7 @@ public class CommentController {
         return new ResponseEntity<>(commentMapper.toDto(comment), HttpStatus.CREATED);
     }
     
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommentDTO> updateComment(@RequestBody CommentDTO commentDTO, @PathVariable Long id){
     	Comment comment;
@@ -72,7 +83,8 @@ public class CommentController {
         return new ResponseEntity<>(commentMapper.toDto(comment), HttpStatus.OK);
     }
 
-    @RequestMapping(value="/delete-comment{id}", method=RequestMethod.DELETE)
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @RequestMapping(value="/{id}", method=RequestMethod.DELETE)
     public ResponseEntity<Void> deleteComment(@PathVariable Long id){
         try {
         	commentService.delete(id);

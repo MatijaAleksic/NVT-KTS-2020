@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.geoMap.dto.ImageDTO;
 import app.geoMap.dto.RatingDTO;
 import app.geoMap.helper.RatingMapper;
+import app.geoMap.model.Image;
 import app.geoMap.model.Rating;
 import app.geoMap.service.RatingService;
 
@@ -29,15 +33,25 @@ public class RatingController {
     private RatingMapper ratingMapper;
 
     
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<RatingDTO>> getAllRatings() {
         List<Rating> ratings = ratingService.findAll();
 
         return new ResponseEntity<>(toRatingDTOList(ratings), HttpStatus.OK);
     }
+    
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @RequestMapping(value= "/by-page",method = RequestMethod.GET)
+    public ResponseEntity<List<RatingDTO>> getAllRatings(Pageable pageable) {
+        Page<Rating> page = ratingService.findAll(pageable);
+        List<RatingDTO> ratingsDTOS = toRatingDTOList(page.toList());
+        //Page<UserDTO> pageUserDTOS = new PageImpl<>(userDTOS,page.getPageable(),page.getTotalElements());
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+        return new ResponseEntity<>(ratingsDTOS, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<RatingDTO> getRating(@PathVariable Long id){
     	Rating rating = ratingService.findOne(id);
@@ -48,7 +62,7 @@ public class RatingController {
         return new ResponseEntity<>(ratingMapper.toDto(rating), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RatingDTO> createRating(@RequestBody RatingDTO ratingDTO){
     	Rating rating;
@@ -61,7 +75,7 @@ public class RatingController {
         return new ResponseEntity<>(ratingMapper.toDto(rating), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RatingDTO> updateRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long id){
     	Rating rating;
@@ -74,7 +88,7 @@ public class RatingController {
         return new ResponseEntity<>(ratingMapper.toDto(rating), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")	
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")	
     @RequestMapping(value="/{id}", method=RequestMethod.DELETE)
     public ResponseEntity<Void> deleteRating(@PathVariable Long id){
         try {

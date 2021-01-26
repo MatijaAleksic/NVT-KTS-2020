@@ -3,11 +3,11 @@ package app.geoMap.constants;
 public class RatingConstants {
 
 	public static final Long DB_RATING_ID = 1L;
-	public static final int DB_RATING_VALUE= 1;
+	public static final float DB_RATING_VALUE= 1;
 	
 	public static final Long NEW_RATING_ID = 5L;
 	public static final Long NEW_RATING_IDD = 1L;
-	public static final int NEW_RATING_VALUE= 5;
+	public static final float NEW_RATING_VALUE= 5;
 	
     public static final Long NEW_USER_ID = 5L;
     public static final String NEW_USER_EMAIL = "matijaAleksic@maildrop.cc";

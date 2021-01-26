@@ -10,4 +10,6 @@ public interface RatingRepository extends JpaRepository<Rating, Long>{
 	Rating findByUser_Email(String email);
 	
 	Rating findByUser_Id(Long id);
+	
+	Rating findByValue(float value);
 }

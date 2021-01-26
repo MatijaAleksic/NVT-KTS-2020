@@ -28,7 +28,7 @@ public class Rating {
 	@Column(name = "value" , nullable = true ,unique = false)
 	private float value;
 	
-	@OneToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
 	private User user;
 	
 	@ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
