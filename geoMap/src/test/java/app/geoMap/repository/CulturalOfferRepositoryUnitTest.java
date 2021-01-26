@@ -25,7 +25,7 @@ public class CulturalOfferRepositoryUnitTest {
 	
 	@Before
 	public void setUp() {
-		entityManager.persist(new CulturalOffer(DB_CO_NAME, DB_CO_DATE, DB_CO_LON, DB_CO_LAT));
+		entityManager.persist(new CulturalOffer(DB_CO_NAME, DB_CO_LON, DB_CO_LAT));
 	}
 	
 	@Test

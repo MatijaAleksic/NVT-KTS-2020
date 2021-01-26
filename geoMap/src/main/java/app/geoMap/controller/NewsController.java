@@ -37,7 +37,7 @@ public class NewsController {
         return new ResponseEntity<>(toNewsDTOList(news), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<NewsDTO> getNews(@PathVariable Long id){
     	News news = NewsService.findOne(id);

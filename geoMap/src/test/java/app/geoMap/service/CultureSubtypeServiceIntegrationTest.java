@@ -52,10 +52,9 @@ public class CultureSubtypeServiceIntegrationTest {
 	@Transactional
 	public void testCreate() throws Exception {
 		CultureSubtype cultureSubtype = new CultureSubtype(NEW_SUBTYPE);
-		CultureType cultureType = new CultureType(DB_TYPE);
-		
-		
-		cultureSubtype.setCultureType(cultureType);
+		//CultureType cultureType = new CultureType(DB_TYPE);
+		//cultureSubtype.setCultureType(cultureType);
+		cultureSubtype.setId(SUBTYPE_ID);
 		CultureSubtype created = cultureSubtypeService.create(cultureSubtype);
 		
 		

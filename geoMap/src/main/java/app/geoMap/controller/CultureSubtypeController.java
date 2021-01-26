@@ -20,7 +20,7 @@ import app.geoMap.service.CultureSubtypeService;
 import app.geoMap.model.CultureSubtype;
 
 @RestController
-@RequestMapping(value =  "/api/cultural-subtype", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value =  "/api/culture_subtype", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CultureSubtypeController {
 	
 	@Autowired
@@ -30,16 +30,16 @@ public class CultureSubtypeController {
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<CultureSubtypeDTO>> getAllCultureSubtypes(@PathVariable Long cultureTypeId){
-		List<CultureSubtype> cultureSubtypes = cultureSubtypeService.findAll(cultureTypeId);
+	public ResponseEntity<List<CultureSubtypeDTO>> getAllCultureSubtypes(){
+		List<CultureSubtype> cultureSubtypes = cultureSubtypeService.findAll();
 		
 		return new ResponseEntity<>(toCultureSubtypeDTOList(cultureSubtypes),HttpStatus.OK);
 	}
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
-	public ResponseEntity<CultureSubtypeDTO> getCultureSubtype(@PathVariable ("typeId") Long typeId, @PathVariable("id") Long id){
-		CultureSubtype cultureSubtype = cultureSubtypeService.findOne(typeId, id);
+	public ResponseEntity<CultureSubtypeDTO> getCultureSubtype( @PathVariable("id") Long id){
+		CultureSubtype cultureSubtype = cultureSubtypeService.findOne(id);
 		if(cultureSubtype == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -49,10 +49,10 @@ public class CultureSubtypeController {
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CultureSubtypeDTO> createCultureSubtype(@RequestBody CultureSubtypeDTO culturalSubtypeDTO, @PathVariable Long typeId){
+	public ResponseEntity<CultureSubtypeDTO> createCultureSubtype(@RequestBody CultureSubtypeDTO culturalSubtypeDTO){
 		CultureSubtype cultureSubtype;
 		try {
-			cultureSubtype = cultureSubtypeService.create(cultureSubtypeMapper.toEntity(culturalSubtypeDTO), typeId);
+			cultureSubtype = cultureSubtypeService.create(cultureSubtypeMapper.toEntity(culturalSubtypeDTO));
 		} catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -62,10 +62,10 @@ public class CultureSubtypeController {
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CultureSubtypeDTO> updateCultureSubtype(@RequestBody CultureSubtypeDTO culturalSubtypeDTO, @PathVariable Long typeId, @PathVariable Long id){
+	public ResponseEntity<CultureSubtypeDTO> updateCultureSubtype(@RequestBody CultureSubtypeDTO culturalSubtypeDTO, @PathVariable Long id){
 		CultureSubtype cultureSubtype;
 		try {
-			cultureSubtype = cultureSubtypeService.update(cultureSubtypeMapper.toEntity(culturalSubtypeDTO), id, typeId);
+			cultureSubtype = cultureSubtypeService.update(cultureSubtypeMapper.toEntity(culturalSubtypeDTO), id);
 		} catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -75,9 +75,9 @@ public class CultureSubtypeController {
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
-	public ResponseEntity<Void> deleteCultureSubtype(@PathVariable Long typeId, @PathVariable Long id){
+	public ResponseEntity<Void> deleteCultureSubtype( @PathVariable Long id){
 		try {
-			cultureSubtypeService.delete(id, typeId);
+			cultureSubtypeService.delete(id);
 		} catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -2,16 +2,22 @@ package app.geoMap.controller;
 
 import static app.geoMap.constants.CultureSubtypeConstants.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
+import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +27,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import app.geoMap.dto.CultureSubtypeDTO;
+import app.geoMap.dto.UserLoginDTO;
+import app.geoMap.dto.UserTokenStateDTO;
 import app.geoMap.model.CultureSubtype;
 import app.geoMap.service.CultureSubtypeService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CultureSubtypeControllerIntegrationTest {
 
 	@Autowired
@@ -37,24 +46,25 @@ public class CultureSubtypeControllerIntegrationTest {
 
 	private String accessToken;
 
-	/*
+	
 	@Before
-	public void login(String username, String password) {
-		ResponseEntity<UserTokenStateDTO> responseEntity = restTemplate.postForEntity("/auth/log-in", new UserLoginDTO(username,password), UserTokenStateDTO.class);
+	public void login() {
+		ResponseEntity<UserTokenStateDTO> responseEntity = restTemplate.postForEntity("/auth/log-in", 
+				new UserLoginDTO("markoMarkovic@maildrop.cc", "MarkoMarkovic12"), UserTokenStateDTO.class);
 		accessToken = "Bearer " + responseEntity.getBody().getAccessToken();
 	}
-	*/
 
 
 	@Test
-	public void testGetAllCultureTypes() {
-		/*
+	public void AtestGetAllCultureSubtypes() {
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
 		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
-		*/
+		
 
-		ResponseEntity<CultureSubtypeDTO[]> responseEntity = restTemplate.getForEntity("/api/cultural-subtype", CultureSubtypeDTO[].class);
+		ResponseEntity<CultureSubtypeDTO[]> responseEntity =
+				restTemplate.exchange("/api/culture_subtype", HttpMethod.GET, httpEntity, CultureSubtypeDTO[].class);
 
 		CultureSubtypeDTO[] cultureSubtypes = responseEntity.getBody();
 
@@ -67,12 +77,18 @@ public class CultureSubtypeControllerIntegrationTest {
 	}
 
 	@Test 
-	public void testGetCultureSubtype() {
-		ResponseEntity<CultureSubtypeDTO> responseEntity = restTemplate.getForEntity("/api/culture-subtype" + SUBTYPE_ID, CultureSubtypeDTO.class);
+	public void BtestGetCultureSubtype() {
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
+		HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+		
+		ResponseEntity<CultureSubtypeDTO> responseEntity = 
+				restTemplate.exchange("/api/culture_subtype/1", HttpMethod.GET, httpEntity, CultureSubtypeDTO.class);
 
 		CultureSubtypeDTO cultureSubtype = responseEntity.getBody();
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		//assertNull(cultureSubtype);
+		assertNotNull(cultureSubtype);
 		assertEquals(DB_SUBTYPE, cultureSubtype.getName());
 
 	}
@@ -80,15 +96,21 @@ public class CultureSubtypeControllerIntegrationTest {
 	@Test
     @Transactional
     @Rollback(true)
-	public void testCreateCultureSubtype() throws Exception {
+	public void CtestCreateCultureSubtype() throws Exception {
+		
 		int size = cultureSubtypeService.findAll().size();
 
-		ResponseEntity<CultureSubtypeDTO> responseEntity = restTemplate.postForEntity("/api/culture-subtype"
-				,new CultureSubtypeDTO(null, NEW_SUBTYPE), CultureSubtypeDTO.class);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
+		HttpEntity<CultureSubtypeDTO> httpEntity = new HttpEntity<>(new CultureSubtypeDTO(null, NEW_SUBTYPE), headers);
+		
+
+		ResponseEntity<CultureSubtypeDTO> responseEntity = restTemplate.exchange("/api/culture_subtype"
+				,HttpMethod.POST, httpEntity, CultureSubtypeDTO.class);
 
 		CultureSubtypeDTO cultureSubtype = responseEntity.getBody();
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-		//assertNull(cultureSubtype);
+		assertNotNull(cultureSubtype);
 		assertEquals(NEW_SUBTYPE, cultureSubtype.getName());
 
 		List<CultureSubtype> cultureSubtypes = cultureSubtypeService.findAll();
@@ -103,13 +125,18 @@ public class CultureSubtypeControllerIntegrationTest {
 	@Test
     @Transactional
     @Rollback(true)
-	public void testUpdateCultureSubtype() throws Exception {
-		ResponseEntity<CultureSubtypeDTO> responseEntity = restTemplate.exchange("/api/culture-subtype" + SUBTYPE_ID,  HttpMethod.PUT,
-				new HttpEntity<CultureSubtypeDTO>(new CultureSubtypeDTO(DB_SUBTYPE_ID, NEW_SUBTYPE)), CultureSubtypeDTO.class);
+	public void DtestUpdateCultureSubtype() throws Exception {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
+		HttpEntity<CultureSubtypeDTO> httpEntity = new HttpEntity<>(new CultureSubtypeDTO(null, NEW_SUBTYPE),headers);
+		
+		ResponseEntity<CultureSubtypeDTO> responseEntity = restTemplate.exchange("/api/culture_subtype/1",  
+				HttpMethod.PUT, httpEntity, CultureSubtypeDTO.class);
 
 		CultureSubtypeDTO cultureSubtype = responseEntity.getBody();
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		//assertNull(cultureSubtype);
+		assertNotNull(cultureSubtype);
 		assertEquals(DB_SUBTYPE_ID, cultureSubtype.getId());
 		assertEquals(NEW_SUBTYPE, cultureSubtype.getName());
 
@@ -126,15 +153,19 @@ public class CultureSubtypeControllerIntegrationTest {
 	@Test
     @Transactional
     @Rollback(true)
-	public void testDeleteCultureSubtype() throws Exception {
+	public void EtestDeleteCultureSubtype() throws Exception {
 
-		CultureSubtype cultureSubtype = cultureSubtypeService.create(new CultureSubtype(NEW_SUBTYPE));
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.AUTHORIZATION, accessToken);
+		HttpEntity<CultureSubtypeDTO> httpEntity = new HttpEntity<>(headers);
+		
+		//CultureSubtype cultureSubtype = cultureSubtypeService.create(new CultureSubtype(NEW_SUBTYPE));
 
 		List<CultureSubtype> cultureSubtypes = cultureSubtypeService.findAll();
 		int size = cultureSubtypeService.findAll().size();
 
-		ResponseEntity<Void> responseEntity = restTemplate.exchange("/api/culture-subtype/" + cultureSubtype.getId(),
-				HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
+		ResponseEntity<Void> responseEntity = restTemplate.exchange("/api/culture_subtype/1",
+				HttpMethod.DELETE, httpEntity, Void.class);
 
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals(size - 1, cultureSubtypeService.findAll().size());
